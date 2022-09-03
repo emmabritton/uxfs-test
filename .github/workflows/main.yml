@@ -43,10 +43,6 @@ jobs:
 
       - name: Install linux dependencies
         if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get install libasound2-dev libudev-dev pkg-config build-essential
-
-      - name: Install linux libs
         run: sudo apt-get update; sudo apt-get install alsa pkg-config build-essential libasound2-dev
 
       - uses: actions-rs/cargo@v1
