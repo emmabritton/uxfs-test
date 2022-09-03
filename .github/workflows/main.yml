@@ -43,9 +43,8 @@ jobs:
 
       - uses: actions-rs/cargo@v1
         with:
-          use-cross: true
           command: build
-          toolchain: nightly
+          toolchain: stable
           args: --release --target=${{ matrix.target }}
 
       - name: Prepare build artifacts [Windows]
