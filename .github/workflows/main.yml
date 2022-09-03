@@ -1,0 +1,71 @@
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+      - name: Install linux libs
+        run: sudo apt-get update; sudo apt-get install --no-install-recommends pkg-config build-essential libasound2-dev
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --all-targets -- -D clippy::all
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    name: Build and Release
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - x86_64-apple-darwin
+          - x86_64-pc-windows-msvc
+          - x86_64-unknown-linux-gnu
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-20.04
+            name: usfx_test-linux.tar.gz
+          - target: x86_64-apple-darwin
+            os: macOS-latest
+            name: usfx_test-mac.tar.gz
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            name: usfx_test-windows.zip
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          toolchain: nightly
+          args: --release --target=${{ matrix.target }}
+
+      - name: Prepare build artifacts [Windows]
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd target/${{ matrix.target }}/release
+          strip usfx_test.exe
+          7z a ../../../${{ matrix.name }} usfx_test.exe
+          cd -
+      - name: Prepare build artifacts [-nix]
+        if: matrix.os != 'windows-latest'
+        run: |
+          cd target/${{ matrix.target }}/release
+          strip usfx_test
+          tar cvf ../../../${{ matrix.name }} usfx_test
+          cd -
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ matrix.name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
