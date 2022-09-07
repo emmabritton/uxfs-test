@@ -1,13 +1,13 @@
+use crate::ui::{duty_text, generate_shapes, generate_text, osc_text, render_ui};
+use crate::Audio;
 use buffer_graphics_lib::color::LIGHT_GRAY;
-use buffer_graphics_lib::Graphics;
-use buffer_graphics_lib::shapes::{Shape, stroke};
+use buffer_graphics_lib::shapes::{stroke, Shape};
 use buffer_graphics_lib::text::Text;
+use buffer_graphics_lib::Graphics;
 use indexmap::{indexmap, IndexMap};
 use usfx::{DutyCycle, OscillatorType, Sample};
 use winit::event::VirtualKeyCode;
 use winit_input_helper::WinitInputHelper;
-use crate::Audio;
-use crate::ui::{duty_text, generate_shapes, generate_text, osc_text, render_ui};
 
 pub struct Controller {
     pub items: IndexMap<Item, State>,
@@ -49,7 +49,7 @@ impl Controller {
             cycle: DutyCycle::Half,
             texts,
             duty_text,
-            osc_text
+            osc_text,
         }
     }
 }

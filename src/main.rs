@@ -1,21 +1,21 @@
 #![windows_subsystem = "windows"]
 
 mod audio;
-mod ui;
 mod controller;
+mod ui;
 
 use crate::audio::Audio;
+use crate::controller::Controller;
 use anyhow::Result;
+use buffer_graphics_lib::color::BLACK;
 use buffer_graphics_lib::Graphics;
 use pixels_graphics_lib::prefs::WindowPreferences;
 use pixels_graphics_lib::{setup, WindowScaling};
 use std::thread::sleep;
 use std::time::Duration;
-use buffer_graphics_lib::color::BLACK;
 use winit::event::{Event, VirtualKeyCode};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit_input_helper::WinitInputHelper;
-use crate::controller::Controller;
 
 const WIDTH: usize = 260;
 const HEIGHT: usize = 320;
