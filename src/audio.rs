@@ -1,73 +1,62 @@
-use cpal::traits::EventLoopTrait;
-use cpal::traits::HostTrait;
+use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use std::sync::{Arc, Mutex};
-use std::thread;
+use cpal::{SampleFormat, SampleRate, SupportedStreamConfig};
+use usfx::{Mixer, Sample};
+use cpal::Stream;
 
-const SAMPLE_RATE: usize = 44_100;
+const SAMPLE_RATE: u32 = 44_100;
 
-/// Manages the audio.
-#[derive(Default)]
 pub struct Audio {
-    mixer: Arc<Mutex<usfx::Mixer>>,
+    mixer: Arc<Mutex<Mixer>>,
+    stream: Stream,
 }
 
 impl Audio {
-    /// Instantiate a new audio object without a generator.
     pub fn new() -> Self {
-        Self {
-            mixer: Arc::new(Mutex::new(usfx::Mixer::new(SAMPLE_RATE))),
-        }
-    }
-
-    /// Play samples.
-    pub fn play(&mut self, sample: usfx::Sample) {
-        // Add the sample to the mixer
-        self.mixer.lock().unwrap().play(sample);
-    }
-
-    /// Start a thread which will emit the audio.
-    pub fn run(&mut self) {
-        let mixer = self.mixer.clone();
-
-        // Setup the audio system
+        let mixer = Arc::new(Mutex::new(Mixer::new(SAMPLE_RATE as usize)));
         let host = cpal::default_host();
-        let event_loop = host.event_loop();
 
         let device = host
             .default_output_device()
             .expect("no output device available");
 
-        let format = cpal::Format {
-            channels: 1,
-            sample_rate: cpal::SampleRate(SAMPLE_RATE as u32),
-            data_type: cpal::SampleFormat::F32,
-        };
+        let config = device.supported_output_configs().expect("no output configs available")
+            .find(|config| config.sample_format() == SampleFormat::F32);
 
-        let stream_id = event_loop
-            .build_output_stream(&device, &format)
-            .expect("could not build output stream");
+        if config.is_none() {
+            panic!("no F32 config available");
+        }
 
-        event_loop
-            .play_stream(stream_id)
-            .expect("could not play stream");
+        let config = config.unwrap();
 
-        thread::spawn(move || {
-            event_loop.run(move |stream_id, stream_result| {
-                let stream_data = match stream_result {
-                    Ok(data) => data,
-                    Err(err) => {
-                        eprintln!("an error occurred on stream {:?}: {}", stream_id, err);
-                        return;
-                    }
-                };
+        if config.min_sample_rate() > SampleRate(SAMPLE_RATE) || config.max_sample_rate() < SampleRate(SAMPLE_RATE) {
+            panic!("44100 Hz not supported");
+        }
 
-                match stream_data {
-                    cpal::StreamData::Output {
-                        buffer: cpal::UnknownTypeOutputBuffer::F32(mut buffer),
-                    } => mixer.lock().unwrap().generate(&mut buffer),
-                    _ => panic!("output type buffer can not be used"),
-                }
-            });
-        });
+        let format = SupportedStreamConfig::new(config.channels(), SampleRate(SAMPLE_RATE), config.buffer_size().clone(), SampleFormat::F32);
+
+        let stream_mixer = mixer.clone();
+
+        let stream = device.build_output_stream::<f32, _, _>(
+            &format.config(),
+            move |data, _| {
+                stream_mixer.lock().unwrap().generate(data)
+            },
+            |err| eprintln!("cpal error: {:?}", err),
+        ).expect("could not build output stream");
+
+        let struct_mixer = mixer.clone();
+        Self {
+            mixer: struct_mixer,
+            stream,
+        }
+    }
+
+    pub fn play(&mut self, sample: Sample) {
+        self.mixer.lock().unwrap().play(sample);
+    }
+
+    pub fn run(&mut self) {
+        self.stream.play().expect("unable to start stream");
     }
 }
