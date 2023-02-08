@@ -3,7 +3,7 @@ name = "usfx_test"
 version = "0.1.1"
 edition = "2021"
 publish = false
-authors = ["Ray Britton <raybritton@pm.me>"]
+authors = ["Emma Britton <emmabritton@pm.me>"]
 description = "Simple program to test USFX lib"
 license-file = "LICENSE"
 
