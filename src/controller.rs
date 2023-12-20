@@ -1,21 +1,17 @@
-use crate::ui::{duty_text, generate_shapes, generate_text, osc_text, render_ui};
+use crate::ui::*;
 use crate::Audio;
-use buffer_graphics_lib::color::LIGHT_GRAY;
-use buffer_graphics_lib::shapes::{stroke, Shape};
-use buffer_graphics_lib::text::Text;
-use buffer_graphics_lib::Graphics;
 use indexmap::{indexmap, IndexMap};
+use pixels_graphics_lib::buffer_graphics_lib::prelude::*;
+use pixels_graphics_lib::prelude::*;
 use usfx::{DutyCycle, OscillatorType, Sample};
-use winit::event::VirtualKeyCode;
-use winit_input_helper::WinitInputHelper;
 
 pub struct Controller {
     pub items: IndexMap<Item, State>,
     pub audio: Audio,
     pub osc_type: OscillatorType,
     pub cycle: DutyCycle,
-    pub shapes: Vec<Shape>,
-    pub button_shape: Shape,
+    pub shapes: ShapeCollection,
+    pub button_shape: Drawable<Rect>,
     pub texts: Vec<Text>,
     pub duty_text: IndexMap<DutyCycle, Text>,
     pub osc_text: IndexMap<OscillatorType, Text>,
@@ -24,14 +20,14 @@ pub struct Controller {
 impl Controller {
     pub fn new(audio: Audio) -> Self {
         let items = indexmap! {
-            Item::new('q', 'w', VirtualKeyCode::Q, VirtualKeyCode::W, "Volume") => State::Enabled(1.0),
-            Item::new('a', 's', VirtualKeyCode::A, VirtualKeyCode::S, "Attack")=> State::Enabled(0.1),
-            Item::new('z', 'x', VirtualKeyCode::Z, VirtualKeyCode::X, "Decay")=> State::Enabled(0.1),
-            Item::new('e', 'r', VirtualKeyCode::E, VirtualKeyCode::R, "Sustain")=> State::Enabled(0.5),
-            Item::new('d', 'f', VirtualKeyCode::D, VirtualKeyCode::F, "Release")=> State::Enabled(0.5),
-            Item::new_int('c', 'v', VirtualKeyCode::C, VirtualKeyCode::V, "Freq")=> State::Enabled(500.0),
-            Item::new_tog('t', 'y', 'u', VirtualKeyCode::T, VirtualKeyCode::Y,VirtualKeyCode::U, "Crunch")=> State::Disabled(0.0),
-            Item::new_tog('g', 'h', 'j', VirtualKeyCode::G, VirtualKeyCode::H,VirtualKeyCode::J, "Drive")=> State::Disabled(0.0),
+            Item::new('q', 'w', KeyCode::KeyQ, KeyCode::KeyW, "Volume") => State::Enabled(1.0),
+            Item::new('a', 's', KeyCode::KeyA, KeyCode::KeyS, "Attack")=> State::Enabled(0.1),
+            Item::new('z', 'x', KeyCode::KeyZ, KeyCode::KeyX, "Decay")=> State::Enabled(0.1),
+            Item::new('e', 'r', KeyCode::KeyE, KeyCode::KeyR, "Sustain")=> State::Enabled(0.5),
+            Item::new('d', 'f', KeyCode::KeyD, KeyCode::KeyF, "Release")=> State::Enabled(0.5),
+            Item::new_int('c', 'v', KeyCode::KeyC, KeyCode::KeyV, "Freq")=> State::Enabled(500.0),
+            Item::new_tog('t', 'y', 'u', KeyCode::KeyT, KeyCode::KeyY,KeyCode::KeyU, "Crunch")=> State::Disabled(0.0),
+            Item::new_tog('g', 'h', 'j', KeyCode::KeyG, KeyCode::KeyH,KeyCode::KeyJ, "Drive")=> State::Disabled(0.0),
         };
 
         let shapes = generate_shapes();
@@ -40,11 +36,13 @@ impl Controller {
         let osc_text = osc_text();
         let duty_text = duty_text();
 
+        let button_shape = Drawable::from_obj(Rect::new((0, 0), (11, 13)), stroke(LIGHT_GRAY));
+
         Controller {
             items,
             audio,
             shapes,
-            button_shape: Shape::rect((0, 0), (11, 13), stroke(LIGHT_GRAY)),
+            button_shape,
             osc_type: OscillatorType::Sine,
             cycle: DutyCycle::Half,
             texts,
@@ -55,52 +53,52 @@ impl Controller {
 }
 
 impl Controller {
-    pub fn input(&mut self, helper: &WinitInputHelper) {
+    pub fn key_pressed(&mut self, key: KeyCode, shift_pressed: bool) {
         for (item, value) in self.items.iter_mut() {
             let mut delta = match item.item_type {
                 ItemType::Float => 0.1,
                 ItemType::Int => 10.0,
             };
-            if helper.held_shift() {
+            if shift_pressed {
                 delta *= 10.0;
             }
-            if helper.key_pressed(item.dec_code) {
+            if key == item.dec_code {
                 if value.num() > delta {
                     *value = value.update(-delta);
                 } else {
                     *value = value.replace(0.0);
                 }
             }
-            if helper.key_pressed(item.inc_code) {
+            if key == item.inc_code {
                 *value = value.update(delta);
             }
             if let Some(tog) = item.toggle_code {
-                if helper.key_pressed(tog) {
+                if key == tog {
                     *value = value.swap();
                 }
             }
         }
-        if helper.key_pressed(VirtualKeyCode::Key1) {
+        if key == KeyCode::Digit1 {
             self.osc_type = OscillatorType::Sine;
-        } else if helper.key_pressed(VirtualKeyCode::Key2) {
+        } else if key == KeyCode::Digit2 {
             self.osc_type = OscillatorType::Triangle;
-        } else if helper.key_pressed(VirtualKeyCode::Key3) {
+        } else if key == KeyCode::Digit3 {
             self.osc_type = OscillatorType::Saw;
-        } else if helper.key_pressed(VirtualKeyCode::Key4) {
+        } else if key == KeyCode::Digit4 {
             self.osc_type = OscillatorType::Square;
-        } else if helper.key_pressed(VirtualKeyCode::Key5) {
+        } else if key == KeyCode::Digit5 {
             self.osc_type = OscillatorType::Noise;
         }
-        if helper.key_pressed(VirtualKeyCode::Key7) {
+        if key == KeyCode::Digit7 {
             self.cycle = DutyCycle::Half;
-        } else if helper.key_pressed(VirtualKeyCode::Key8) {
+        } else if key == KeyCode::Digit8 {
             self.cycle = DutyCycle::Third;
-        } else if helper.key_pressed(VirtualKeyCode::Key9) {
+        } else if key == KeyCode::Digit9 {
             self.cycle = DutyCycle::Quarter;
-        } else if helper.key_pressed(VirtualKeyCode::Key0) {
+        } else if key == KeyCode::Digit0 {
             self.cycle = DutyCycle::Eight;
         }
-        if helper.key_pressed(VirtualKeyCode::Space) {
+        if key == KeyCode::Space {
             let mut sample = Sample::default();
             sample.osc_type(self.osc_type);
             sample.osc_duty_cycle(self.cycle);
@@ -186,9 +184,9 @@ pub struct Item {
     pub dec: char,
     pub inc: char,
     pub toggle: Option<char>,
-    pub dec_code: VirtualKeyCode,
-    pub inc_code: VirtualKeyCode,
-    pub toggle_code: Option<VirtualKeyCode>,
+    pub dec_code: KeyCode,
+    pub inc_code: KeyCode,
+    pub toggle_code: Option<KeyCode>,
     pub name: &'static str,
     pub item_type: ItemType,
 }
@@ -203,8 +201,8 @@ impl Item {
     pub fn new(
         dec: char,
         inc: char,
-        dec_code: VirtualKeyCode,
-        inc_code: VirtualKeyCode,
+        dec_code: KeyCode,
+        inc_code: KeyCode,
         name: &'static str,
     ) -> Self {
         Self {
@@ -223,9 +221,9 @@ impl Item {
         tog: char,
         dec: char,
         inc: char,
-        tog_code: VirtualKeyCode,
-        dec_code: VirtualKeyCode,
-        inc_code: VirtualKeyCode,
+        tog_code: KeyCode,
+        dec_code: KeyCode,
+        inc_code: KeyCode,
         name: &'static str,
     ) -> Self {
         Self {
@@ -243,8 +241,8 @@ impl Item {
     pub fn new_int(
         dec: char,
         inc: char,
-        dec_code: VirtualKeyCode,
-        inc_code: VirtualKeyCode,
+        dec_code: KeyCode,
+        inc_code: KeyCode,
         name: &'static str,
     ) -> Self {
         Self {
