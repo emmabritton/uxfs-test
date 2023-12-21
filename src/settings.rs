@@ -25,7 +25,7 @@ impl AppPrefs {
         } else {
             Settings {
                 theme: 0,
-                saved: vec![],
+                saved: [None, None, None, None, None, None, None, None, None, None],
             }
         };
         Ok(AppPrefs { prefs, data })
@@ -44,7 +44,7 @@ impl AppPrefs {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Settings {
     pub theme: usize,
-    pub saved: Vec<SoundSave>,
+    pub saved: [Option<SoundSave>; 10],
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -66,9 +66,9 @@ pub struct SoundSave {
 }
 
 impl SoundSave {
-    pub fn new(name: String) -> Self {
+    pub fn new_blank() -> Self {
         Self {
-            name,
+            name: String::new(),
             when: Utc::now(),
             volume: 0.0,
             attack: 0.0,
@@ -84,10 +84,38 @@ impl SoundSave {
             duty: DutyCycle::Half,
         }
     }
+
+    pub fn fix_name(
+        &mut self
+    ) {
+        let osc = match self.osc {
+            OscillatorType::Sine => "sin",
+            OscillatorType::Saw => "saw",
+            OscillatorType::Triangle => "tri",
+            OscillatorType::Square => "squ",
+            OscillatorType::Noise => "noi",
+        };
+        let crunch = match self.crunch_enabled {
+            false => " - ".to_string(),
+            true => format!("{:.1}", self.crunch),
+        };
+        let drive = match self.drive_enabled {
+            false => " - ".to_string(),
+            true => format!("{:.1}", self.drive),
+        };
+        self.name = format!(
+            "{} {: <4} {:.1} {:.1} {:.1} {:.1} {} {}",
+            osc, self.freq, self.attack, self.decay, self.sustain, self.release, crunch, drive
+        )
+    }
+
+    pub fn formatted_when(&self) -> String {
+        self.when.format("%Y/%m/%d %H:%M").to_string()
+    }
 }
 
 impl SoundSave {
     pub fn freq(&self) -> usize {
-        usize::try_from(self.freq).unwrap_or_else(|_| 500)
+        usize::try_from(self.freq).unwrap_or(500)
     }
 }
