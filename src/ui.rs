@@ -1,6 +1,9 @@
+use crate::settings::SoundSave;
 use crate::controller::*;
 use crate::theme::Theme;
+use crate::waveform::Waveform;
 use indexmap::{indexmap, IndexMap};
+use pixels_graphics_lib::buffer_graphics_lib::clipping::Clip;
 use pixels_graphics_lib::buffer_graphics_lib::prelude::TextPos::Px;
 use pixels_graphics_lib::buffer_graphics_lib::prelude::TextSize::*;
 use pixels_graphics_lib::buffer_graphics_lib::prelude::*;
@@ -12,7 +15,8 @@ pub fn render_ui(
     graphics: &mut Graphics,
     theme: &Theme,
     active_theme: usize,
-    waveform: &[(Coord,Coord)]
+    waveform: &Waveform,
+    saves: &[Option<SoundSave>],
 ) {
     controller.shapes.render(graphics);
     for text in &controller.texts {
@@ -43,7 +47,7 @@ pub fn render_ui(
 
     draw_button(
         graphics,
-        '1',
+        'I',
         6,
         198,
         theme.inactive,
@@ -51,7 +55,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        '2',
+        'O',
         66,
         198,
         theme.inactive,
@@ -59,7 +63,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        '3',
+        'P',
         166,
         198,
         theme.inactive,
@@ -67,7 +71,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        '4',
+        'K',
         6,
         216,
         theme.inactive,
@@ -75,7 +79,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        '5',
+        'L',
         86,
         216,
         theme.inactive,
@@ -83,7 +87,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        '7',
+        'b',
         6,
         252,
         theme.inactive,
@@ -91,7 +95,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        '8',
+        'n',
         74,
         252,
         theme.inactive,
@@ -99,7 +103,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        '9',
+        'm',
         6,
         272,
         theme.inactive,
@@ -107,7 +111,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        '0',
+        ',',
         74,
         272,
         theme.inactive,
@@ -116,15 +120,42 @@ pub fn render_ui(
     draw_theme(graphics, theme, active_theme);
 
     draw_waveform(graphics, theme, waveform);
-}
+    draw_duration(graphics, theme, waveform);
 
-fn draw_waveform(graphics: &mut Graphics, theme: &Theme, points: &[(Coord,Coord)]) {
-    graphics.with_translate(coord!(3,300), |graphics| {
-        for point in points {
-            // graphics.set_pixel(3+point.x, 297+point.y, RED);
-            graphics.draw_line(point.0, point.1, theme.active);
+    saves.iter().take(10).enumerate().for_each(|(i,save)| {
+        if let Some(save) = save {
+            graphics.with_translate(coord!(225, 40 + (i * 26)), |g| {
+                draw_save(
+                    g,
+                    theme,
+                    i + 1,
+                    &save.name,
+                    &save.formatted_when(),
+                );
+            });
         }
     });
+}
+
+fn draw_waveform(graphics: &mut Graphics, theme: &Theme, waveform: &Waveform) {
+    graphics.with_translate(coord!(3, 297), |graphics| {
+        graphics.set_clip(Clip::new(337, 48));
+        waveform.render_line(graphics, theme.inactive);
+        graphics.clip_mut().set_all_valid();
+    });
+}
+
+fn draw_duration(graphics: &mut Graphics, theme: &Theme, waveform: &Waveform) {
+    graphics.draw_text(
+        &format!("{:.1}", waveform.duration),
+        Px(333, 296),
+        (theme.active, Normal, Positioning::RightBottom),
+    );
+    graphics.draw_text(
+        "s",
+        Px(338, 296),
+        (theme.inactive, Small, Positioning::RightBottom),
+    );
 }
 
 fn draw_item(
@@ -243,6 +274,26 @@ pub fn generate_shapes(theme: &Theme) -> ShapeCollection {
         Rect::new((2, 296), (338, 340)),
         stroke(general_color),
     );
+    InsertShape::insert_above(
+        &mut collection,
+        Rect::new((260, 286), (338, 296)),
+        stroke(general_color),
+    );
+    InsertShape::insert_above(
+        &mut collection,
+        Rect::new((223, 2), (280, 18)),
+        stroke(general_color),
+    );
+    InsertShape::insert_above(
+        &mut collection,
+        Rect::new((223, 18), (338, 274)),
+        stroke(general_color),
+    );
+    InsertShape::insert_above(
+        &mut collection,
+        Line::new((223, 38), (338, 38)),
+        stroke(general_color),
+    );
     collection
 }
 
@@ -260,8 +311,12 @@ pub fn generate_text(theme: &Theme) -> Vec<Text> {
         Text::new("Oscillator", Px(4, 182), (general_text_color, Large)),
         Text::new("Duty Cycle", Px(4, 236), (general_text_color, Large)),
         Text::new("Space to play", Px(65, 351), (general_text_color, Large)),
-        Text::new("Saved", Px(240, 6), (general_text_color, Large)),
+        Text::new("Saved", Px(225, 6), (general_text_color, Large)),
         Text::new("Waveform", Px(4, 290), (general_text_color, Small)),
+        Text::new("1-9  to save", Px(225, 20), (general_text_color, Small)),
+        Text::new("+Shift to load", Px(225, 26), (general_text_color, Small)),
+        Text::new("+Ctrl  to delete", Px(225, 32), (general_text_color, Small)),
+        Text::new("Duration", Px(262, 290), (general_text_color, Small)),
     ]
 }
 
@@ -290,7 +345,6 @@ pub fn draw_theme(graphics: &mut Graphics, theme: &Theme, active: usize) {
     graphics.draw_text("[ARROWS] THEME", Px(267, 346), (theme.inactive, Small));
     let width = 60;
     let count = 3;
-    let size = (6, 6);
     let padding = 6;
     let offset = (width - padding * 2) / count;
     for i in 0..=4 {
@@ -314,4 +368,18 @@ pub fn draw_theme_box(
         Rect::new_with_size((267 + offset * which, 358), 6, 6),
         color,
     );
+}
+
+pub fn draw_save(graphics: &mut Graphics, theme: &Theme, idx: usize, name: &str, when: &str) {
+    graphics.draw_rect(Rect::new_with_size((0, 0), 13, 24), stroke(theme.active));
+    graphics.draw_rect(Rect::new_with_size((0, 0), 111, 24), stroke(theme.active));
+    graphics.draw_text(
+        &format!("{idx}"),
+        Px(3, 7),
+        (theme.active, Large),
+    );
+    let (part1, part2) = name.split_at(16);
+    graphics.draw_text(part1, Px(16, 2), (theme.inactive, Small));
+    graphics.draw_text(part2.trim(), Px(16, 8), (theme.inactive, Small));
+    graphics.draw_text(when, Px(16, 14), (theme.inactive, Small));
 }

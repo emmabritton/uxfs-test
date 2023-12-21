@@ -1,6 +1,7 @@
-use crate::app_prefs::SoundSave;
+use crate::settings::SoundSave;
 use crate::theme::Theme;
 use crate::ui::*;
+use crate::waveform::Waveform;
 use crate::Audio;
 use indexmap::{indexmap, IndexMap};
 use pixels_graphics_lib::buffer_graphics_lib::prelude::*;
@@ -17,21 +18,21 @@ pub struct Controller {
     pub texts: Vec<Text>,
     pub duty_text: IndexMap<DutyCycle, Text>,
     pub osc_text: IndexMap<OscillatorType, Text>,
-    pub waveform: Vec<(Coord, Coord)>,
-    pub has_changed: bool
+    pub waveform: Waveform,
+    pub has_changed: bool,
 }
 
 impl Controller {
     pub fn new(audio: Audio, theme: &Theme) -> Self {
         let items = indexmap! {
-            Item::new('q', 'w', KeyCode::KeyQ, KeyCode::KeyW, "Volume") => State::Enabled(1.0),
-            Item::new('a', 's', KeyCode::KeyA, KeyCode::KeyS, "Attack")=> State::Enabled(0.1),
-            Item::new('z', 'x', KeyCode::KeyZ, KeyCode::KeyX, "Decay")=> State::Enabled(0.1),
-            Item::new('e', 'r', KeyCode::KeyE, KeyCode::KeyR, "Sustain")=> State::Enabled(0.5),
-            Item::new('d', 'f', KeyCode::KeyD, KeyCode::KeyF, "Release")=> State::Enabled(0.5),
-            Item::new_int('c', 'v', KeyCode::KeyC, KeyCode::KeyV, "Freq")=> State::Enabled(500.0),
-            Item::new_tog('t', 'y', 'u', KeyCode::KeyT, KeyCode::KeyY,KeyCode::KeyU, "Crunch")=> State::Disabled(0.0),
-            Item::new_tog('g', 'h', 'j', KeyCode::KeyG, KeyCode::KeyH,KeyCode::KeyJ, "Drive")=> State::Disabled(0.0),
+            Item::new('q', 'w', KeyCode::KeyQ, KeyCode::KeyW, ITEM_VOLUME) => State::Enabled(1.0),
+            Item::new('a', 's', KeyCode::KeyA, KeyCode::KeyS, ITEM_ATTACK)=> State::Enabled(0.1),
+            Item::new('z', 'x', KeyCode::KeyZ, KeyCode::KeyX, ITEM_DECAY)=> State::Enabled(0.1),
+            Item::new('e', 'r', KeyCode::KeyE, KeyCode::KeyR, ITEM_SUSTAIN)=> State::Enabled(0.5),
+            Item::new('d', 'f', KeyCode::KeyD, KeyCode::KeyF, ITEM_RELEASE)=> State::Enabled(0.5),
+            Item::new_int('c', 'v', KeyCode::KeyC, KeyCode::KeyV, ITEM_FREQ)=> State::Enabled(500.0),
+            Item::new_tog('t', 'y', 'u', KeyCode::KeyT, KeyCode::KeyY,KeyCode::KeyU, ITEM_CRUNCH)=> State::Disabled(0.0),
+            Item::new_tog('g', 'h', 'j', KeyCode::KeyG, KeyCode::KeyH,KeyCode::KeyJ, ITEM_DRIVE)=> State::Disabled(0.0),
         };
 
         let (shapes, texts, osc_text, duty_text, button_shape) = Controller::gen_themed(theme);
@@ -46,8 +47,8 @@ impl Controller {
             texts,
             duty_text,
             osc_text,
-            waveform: vec![],
-            has_changed: true
+            waveform: Waveform::new(vec![], 1, 1, 1),
+            has_changed: true,
         }
     }
 }
@@ -110,32 +111,32 @@ impl Controller {
                 }
             }
         }
-        if key == KeyCode::Digit1 {
+        if key == KeyCode::KeyI {
             self.has_changed = true;
             self.osc_type = OscillatorType::Sine;
-        } else if key == KeyCode::Digit2 {
+        } else if key == KeyCode::KeyO {
             self.has_changed = true;
             self.osc_type = OscillatorType::Triangle;
-        } else if key == KeyCode::Digit3 {
+        } else if key == KeyCode::KeyP {
             self.has_changed = true;
             self.osc_type = OscillatorType::Saw;
-        } else if key == KeyCode::Digit4 {
+        } else if key == KeyCode::KeyK {
             self.has_changed = true;
             self.osc_type = OscillatorType::Square;
-        } else if key == KeyCode::Digit5 {
+        } else if key == KeyCode::KeyL {
             self.has_changed = true;
             self.osc_type = OscillatorType::Noise;
         }
-        if key == KeyCode::Digit7 {
+        if key == KeyCode::KeyB {
             self.has_changed = true;
             self.cycle = DutyCycle::Half;
-        } else if key == KeyCode::Digit8 {
+        } else if key == KeyCode::KeyN {
             self.has_changed = true;
             self.cycle = DutyCycle::Third;
-        } else if key == KeyCode::Digit9 {
+        } else if key == KeyCode::KeyM {
             self.has_changed = true;
             self.cycle = DutyCycle::Quarter;
-        } else if key == KeyCode::Digit0 {
+        } else if key == KeyCode::Comma {
             self.has_changed = true;
             self.cycle = DutyCycle::Eight;
         }
@@ -145,42 +146,70 @@ impl Controller {
         }
     }
 
-    pub fn create_save_data(&self) {
-        let mut save = SoundSave {
-            name: "".to_string(),
-            when: Default::default(),
-            volume: 0.0,
-            attack: 0.0,
-            decay: 0.0,
-            sustain: 0.0,
-            release: 0.0,
-            freq: 0,
-            crunch: 0.0,
-            crunch_enabled: false,
-            drive: 0.0,
-            drive_enabled: false,
-            osc: self.osc_type,
-            duty: self.cycle,
-        };
+    pub fn load(&mut self, sound: &SoundSave) {
+        for (item, value) in self.items.iter_mut() {
+            match item.name {
+                ITEM_VOLUME => {
+                    value.replace(sound.volume);
+                },
+                ITEM_ATTACK => {
+                    value.replace(sound.attack);
+                },
+                ITEM_DECAY => {
+                    value.replace(sound.decay);
+                },
+                ITEM_SUSTAIN => {
+                    value.replace(sound.sustain);
+                },
+                ITEM_RELEASE => {
+                    value.replace(sound.release);
+                },
+                ITEM_CRUNCH => {
+                    *value = if sound.crunch_enabled {
+                        State::Enabled(sound.crunch)
+                    } else {
+                        State::Disabled(sound.crunch)
+                    };
+                },
+                ITEM_DRIVE => {
+                    *value = if sound.drive_enabled {
+                        State::Enabled(sound.drive)
+                    } else {
+                        State::Disabled(sound.drive)
+                    };
+                },
+                ITEM_FREQ => {
+                    value.replace(sound.freq() as f32);
+                },
+                _ => {}
+            }
+            self.has_changed = true;
+        }
+    }
+
+    pub fn create_save_data(&self) -> SoundSave {
+        let mut save = SoundSave::new_blank();
         for (item, value) in &self.items {
             match item.name {
-                "Volume" => save.volume = value.num(),
-                "Decay" => save.decay = value.num(),
-                "Sustain" => save.sustain = value.num(),
-                "Attack" => save.attack = value.num(),
-                "Release" => save.release = value.num(),
-                "Crunch" => {
+                ITEM_VOLUME => save.volume = value.num(),
+                ITEM_DECAY => save.decay = value.num(),
+                ITEM_SUSTAIN => save.sustain = value.num(),
+                ITEM_ATTACK => save.attack = value.num(),
+                ITEM_RELEASE => save.release = value.num(),
+                ITEM_CRUNCH => {
                     save.crunch = value.num();
                     save.crunch_enabled = matches!(value, State::Enabled(_));
                 }
-                "Drive" => {
+                ITEM_DRIVE => {
                     save.drive = value.num();
                     save.drive_enabled = matches!(value, State::Enabled(_));
                 }
-                "Freq" => save.freq = value.num() as u64,
+                ITEM_FREQ => save.freq = value.num() as u64,
                 _ => {}
             }
         }
+        save.fix_name();
+        save
     }
 
     pub fn create_sample(&self) -> Sample {
@@ -189,32 +218,32 @@ impl Controller {
         sample.osc_duty_cycle(self.cycle);
         for (item, value) in &self.items {
             match item.name {
-                "Volume" => {
+                ITEM_VOLUME => {
                     sample.volume(value.num());
                 }
-                "Decay" => {
+                ITEM_DECAY => {
                     sample.env_decay(value.num());
                 }
-                "Sustain" => {
+                ITEM_SUSTAIN => {
                     sample.env_sustain(value.num());
                 }
-                "Attack" => {
+                ITEM_ATTACK => {
                     sample.env_attack(value.num());
                 }
-                "Release" => {
+                ITEM_RELEASE => {
                     sample.env_release(value.num());
                 }
-                "Crunch" => {
+                ITEM_CRUNCH => {
                     if let State::Enabled(value) = value {
                         sample.dis_crunch(*value);
                     }
                 }
-                "Drive" => {
+                ITEM_DRIVE => {
                     if let State::Enabled(value) = value {
                         sample.dis_drive(*value);
                     }
                 }
-                "Freq" => {
+                ITEM_FREQ => {
                     sample.osc_frequency(value.num() as usize);
                 }
                 _ => {}
@@ -223,8 +252,15 @@ impl Controller {
         sample
     }
 
-    pub fn render(&self, graphics: &mut Graphics<'_>, theme: &Theme, active_theme: usize) {
-        render_ui(self, graphics, theme, active_theme, &self.waveform)
+    pub fn render(&self, graphics: &mut Graphics<'_>, theme: &Theme, active_theme: usize, saves: &[Option<SoundSave>]) {
+        render_ui(
+            self,
+            graphics,
+            theme,
+            active_theme,
+            &self.waveform,
+            saves,
+        )
     }
 }
 
@@ -341,3 +377,12 @@ impl Item {
         }
     }
 }
+
+const ITEM_VOLUME: &str = "volume";
+const ITEM_ATTACK: &str = "attack";
+const ITEM_DECAY: &str = "decay";
+const ITEM_SUSTAIN: &str = "sustain";
+const ITEM_RELEASE: &str = "release";
+const ITEM_FREQ: &str = "freq";
+const ITEM_CRUNCH: &str = "crunch";
+const ITEM_DRIVE: &str = "drive";

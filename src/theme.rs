@@ -13,8 +13,8 @@ pub fn themes() -> Vec<Theme> {
         Theme {
             active: WHITE,
             background: BLACK,
-            disabled: DARK_GRAY,
-            inactive: LIGHT_GRAY,
+            disabled: WHITE.with_brightness(0.2),
+            inactive: WHITE.with_brightness(0.5),
         },
         //Gameboy
         Theme {
@@ -27,15 +27,15 @@ pub fn themes() -> Vec<Theme> {
         Theme {
             active: GREEN,
             background: BLACK,
-            disabled: GREEN.with_brightness(0.4),
-            inactive: GREEN.with_brightness(0.7),
+            disabled: GREEN.with_brightness(0.2),
+            inactive: GREEN.with_brightness(0.5),
         },
         // New Vegas
         Theme {
             active: ORANGE,
             background: BLACK,
-            disabled: ORANGE.with_brightness(0.4),
-            inactive: ORANGE.with_brightness(0.7),
+            disabled: ORANGE.with_brightness(0.2),
+            inactive: ORANGE.with_brightness(0.5),
         },
         // Light
         Theme {

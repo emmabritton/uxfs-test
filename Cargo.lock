@@ -141,7 +141,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d9ed09b18365ed295d722d0b5ed59c01b79a826ff2d2a8f73d5ecca8e6fb2f66"
 dependencies = [
  "android_log-sys",
- "env_logger",
+ "env_logger 0.8.4",
  "lazy_static",
  "log",
 ]
@@ -772,6 +772,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "env_logger"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "95b3f3e67048839cb0d0781f445682a35113da7121f7c949db0e2be96a4fbece"
+dependencies = [
+ "humantime",
+ "is-terminal",
+ "log",
+ "regex",
+ "termcolor",
+]
+
+[[package]]
 name = "equivalent"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1076,6 +1089,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hermit-abi"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d77f7ec81a6d05a3abb01ab6eb7590f6083d08449fe5a1c8b1e620283546ccb7"
+
+[[package]]
 name = "hexf-parse"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1086,6 +1105,12 @@ name = "hound"
 version = "3.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62adaabb884c94955b19907d60019f4e145d091c75345379e70d1ee696f7854f"
+
+[[package]]
+name = "humantime"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9a3a5bfb195931eeb336b2a7b4d761daec841b97f947d34394601737a7bba5e4"
 
 [[package]]
 name = "iana-time-zone"
@@ -1203,6 +1228,17 @@ checksum = "4769cb30e5dcf1710fc6730d3e94f78c47723a014a567de385e113c737394640"
 dependencies = [
  "core-foundation-sys",
  "mach2",
+]
+
+[[package]]
+name = "is-terminal"
+version = "0.4.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cb0889898416213fab133e1d33a0e5858a48177452750691bde3666d0fdbaf8b"
+dependencies = [
+ "hermit-abi",
+ "rustix",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]
@@ -1964,17 +2000,15 @@ dependencies = [
 
 [[package]]
 name = "pixels-graphics-lib"
-version = "0.13.6"
+version = "0.13.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "328d95d545d8871d759416b6a82ffe84af3db07e3d4d4bd8d85b013b23459739"
+checksum = "a77df1a4d9ff96abe9b4dd965dd8d8f53067f349f38376245e491569bd344d88"
 dependencies = [
  "buffer-graphics-lib",
- "directories",
  "graphics-shapes",
  "pixels",
  "rustc-hash",
  "serde",
- "serde_json",
  "simple-game-utils",
  "thiserror",
  "winit",
@@ -2348,13 +2382,17 @@ checksum = "d66dc143e6b11c1eddc06d5c423cfc97062865baf299914ab64caa38182078fe"
 
 [[package]]
 name = "simple-game-utils"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "527ed26fa578e105b8cc86d54c463fcdbe9f383b192fe0fb56c3c2701b6e8137"
+checksum = "7e0150edb249f3fe569333d3c65d5c2450659de4eea499183510c9d6cbe7bf18"
 dependencies = [
  "audio-engine",
+ "directories",
  "gilrs",
  "hound",
+ "log",
+ "serde",
+ "serde_json",
  "thiserror",
 ]
 
@@ -2704,7 +2742,9 @@ dependencies = [
  "anyhow",
  "chrono",
  "cpal 0.15.2",
+ "env_logger 0.10.1",
  "indexmap 2.1.0",
+ "log",
  "pixels-graphics-lib",
  "serde",
  "serde_json",

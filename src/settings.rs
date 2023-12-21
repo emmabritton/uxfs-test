@@ -1,50 +1,11 @@
-use anyhow::Result;
 use chrono::{DateTime, Utc};
-use pixels_graphics_lib::prefs::preferences::{get_pref_dir, Preferences};
 use serde::{Deserialize, Serialize};
 use usfx::{DutyCycle, OscillatorType};
 
-const KEY: &str = "user.settings";
-
-pub struct AppPrefs {
-    prefs: Preferences<Settings>,
-    pub data: Settings,
-}
-
-impl AppPrefs {
-    pub fn new() -> Result<Self> {
-        let mut prefs: Preferences<Settings> = Preferences::new(
-            get_pref_dir("app", "emmabritton", "usfx_tester")?,
-            "user.pref",
-        );
-        if let Err(e) = prefs.load() {
-            eprintln!("Unable to restore app prefs: {e:?}");
-        }
-        let data: Settings = if let Some(data) = prefs.get(KEY) {
-            data.clone()
-        } else {
-            Settings {
-                theme: 0,
-                saved: [None, None, None, None, None, None, None, None, None, None],
-            }
-        };
-        Ok(AppPrefs { prefs, data })
-    }
-}
-
-impl AppPrefs {
-    pub fn save(&mut self) {
-        self.prefs.set(KEY, self.data.clone());
-        if let Err(e) = self.prefs.save() {
-            eprintln!("Unable to save app prefs: {e:?}");
-        }
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Settings {
     pub theme: usize,
-    pub saved: [Option<SoundSave>; 10],
+    pub saved: [Option<SoundSave>; 9],
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -104,7 +65,7 @@ impl SoundSave {
             true => format!("{:.1}", self.drive),
         };
         self.name = format!(
-            "{} {: <4} {:.1} {:.1} {:.1} {:.1} {} {}",
+            "{} {: >4} {:.1} {:.1} {:.1}  {:.1} {} {}",
             osc, self.freq, self.attack, self.decay, self.sustain, self.release, crunch, drive
         )
     }

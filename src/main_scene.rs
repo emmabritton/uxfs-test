@@ -1,26 +1,23 @@
 use crate::theme::{themes, Theme};
+use crate::waveform::Waveform;
 use crate::*;
-use pixels_graphics_lib::buffer_graphics_lib::color::CYAN;
-use pixels_graphics_lib::buffer_graphics_lib::prelude::TextPos::Px;
-use pixels_graphics_lib::buffer_graphics_lib::prelude::TextSize::Normal;
-use pixels_graphics_lib::buffer_graphics_lib::prelude::{Coord, BLACK};
+use pixels_graphics_lib::buffer_graphics_lib::prelude::Coord;
 use pixels_graphics_lib::buffer_graphics_lib::Graphics;
 use pixels_graphics_lib::prelude::SceneUpdateResult::Nothing;
 use pixels_graphics_lib::prelude::*;
 use pixels_graphics_lib::scenes::SceneUpdateResult::Pop;
 use usfx::{Mixer, Sample};
-use crate::waveform::to_waveform;
 
 pub struct MainScene {
     controller: Controller,
     result: SceneUpdateResult<SR, SN>,
     next_input: f64,
-    prefs: AppPrefs,
+    prefs: AppPrefs<Settings>,
     themes: Vec<Theme>,
 }
 
 impl MainScene {
-    pub fn new(mut prefs: AppPrefs) -> MainScene {
+    pub fn new(mut prefs: AppPrefs<Settings>) -> MainScene {
         let mut audio = Audio::new();
         audio.run();
         let themes = themes();
@@ -35,12 +32,28 @@ impl MainScene {
     }
 }
 
+impl MainScene {
+    fn save_sound(&mut self, idx: usize) {
+        self.prefs.data.saved[idx] = Some(self.controller.create_save_data());
+    }
+
+    fn load_sound(&mut self, idx: usize) {
+        if let Some(sound) = &self.prefs.data.saved[idx] {
+            self.controller.load(sound);
+        }
+    }
+
+    fn delete_sound(&mut self, idx: usize) {
+        self.prefs.data.saved[idx] = None;
+    }
+}
+
 impl Scene<SR, SN> for MainScene {
     fn render(&self, graphics: &mut Graphics, _: Coord) {
         let theme = &self.themes[self.prefs.data.theme];
         graphics.clear(theme.background);
         self.controller
-            .render(graphics, theme, self.prefs.data.theme);
+            .render(graphics, theme, self.prefs.data.theme, &self.prefs.data.saved);
     }
 
     fn on_key_down(&mut self, key: KeyCode, _: Coord, held_keys: &Vec<&KeyCode>) {
@@ -57,6 +70,16 @@ impl Scene<SR, SN> for MainScene {
                 self.controller
                     .on_theme_change(&self.themes[self.prefs.data.theme]);
                 return;
+            }
+            if matches!(key, KeyCode::Digit1 | KeyCode::Digit2 | KeyCode::Digit3 | KeyCode::Digit4 | KeyCode::Digit5 | KeyCode::Digit6 | KeyCode::Digit7 | KeyCode::Digit8 | KeyCode::Digit9) {
+                let idx = func_key_idx(key);
+                if held_keys.contains(&&KeyCode::ControlLeft) || held_keys.contains(&&KeyCode::ControlRight) {
+                    self.delete_sound(idx);
+                } else if held_keys.contains(&&KeyCode::ShiftLeft) || held_keys.contains(&&KeyCode::ShiftRight) {
+                    self.load_sound(idx);
+                } else  {
+                    self.save_sound(idx);
+                }
             }
             self.controller.key_pressed(
                 key,
@@ -80,7 +103,7 @@ impl Scene<SR, SN> for MainScene {
             self.controller.has_changed = false;
             let sample = self.controller.create_sample();
             let data = convert_to_data(sample);
-            self.controller.waveform = to_waveform(data, 334, 42);
+            self.controller.waveform = Waveform::new(data, 44100, 334, 42);
             // self.controller.waveform = to_waveform(vec![0.0;44100], 334, 42);
         }
         self.next_input -= timing.fixed_time_step;
@@ -97,11 +120,26 @@ fn convert_to_data(sample: Sample) -> Vec<f32> {
     let mut buffer = [0.0; 100];
     loop {
         mixer.generate(&mut buffer);
-        if buffer.iter().any(|&num| num > 0.0 || num < 0.0) {
+        if buffer.iter().any(|&num| num != 0.0 && num != -0.0) {
             output.extend_from_slice(&buffer);
         } else {
             break;
         }
     }
     output
+}
+
+fn func_key_idx(key: KeyCode) -> usize {
+    match key {
+        KeyCode::Digit1 => 0,
+        KeyCode::Digit2 => 1,
+        KeyCode::Digit3 => 2,
+        KeyCode::Digit4 => 3,
+        KeyCode::Digit5 => 4,
+        KeyCode::Digit6 => 5,
+        KeyCode::Digit7 => 6,
+        KeyCode::Digit8 => 7,
+        KeyCode::Digit9 => 8,
+        _ => panic!("Invalid key code {key:?}")
+    }
 }
