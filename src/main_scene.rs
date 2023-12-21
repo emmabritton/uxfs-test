@@ -7,6 +7,7 @@ use pixels_graphics_lib::prelude::SceneUpdateResult::Nothing;
 use pixels_graphics_lib::prelude::*;
 use pixels_graphics_lib::scenes::SceneUpdateResult::Pop;
 use usfx::{Mixer, Sample};
+use crate::audio::SAMPLE_RATE;
 
 pub struct MainScene {
     controller: Controller,
@@ -122,8 +123,7 @@ impl Scene<SR, SN> for MainScene {
             self.controller.has_changed = false;
             let sample = self.controller.create_sample();
             let data = convert_to_data(sample);
-            self.controller.waveform = Waveform::new(data, 44100, 334, 42);
-            // self.controller.waveform = to_waveform(vec![0.0;44100], 334, 42);
+            self.controller.waveform = Waveform::new(data, SAMPLE_RATE as usize, 334, 42);
         }
         self.next_input -= timing.fixed_time_step;
         self.result.clone()
@@ -133,7 +133,7 @@ impl Scene<SR, SN> for MainScene {
 }
 
 fn convert_to_data(sample: Sample) -> Vec<f32> {
-    let mut mixer = Mixer::new(44100);
+    let mut mixer = Mixer::new(SAMPLE_RATE as usize);
     mixer.play(sample);
     let mut output = vec![];
     let mut buffer = [0.0; 100];
