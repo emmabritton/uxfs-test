@@ -1,5 +1,5 @@
-use crate::settings::SoundSave;
 use crate::controller::*;
+use crate::settings::SoundSave;
 use crate::theme::Theme;
 use crate::waveform::Waveform;
 use indexmap::{indexmap, IndexMap};
@@ -122,16 +122,10 @@ pub fn render_ui(
     draw_waveform(graphics, theme, waveform);
     draw_duration(graphics, theme, waveform);
 
-    saves.iter().take(10).enumerate().for_each(|(i,save)| {
+    saves.iter().take(10).enumerate().for_each(|(i, save)| {
         if let Some(save) = save {
             graphics.with_translate(coord!(225, 40 + (i * 26)), |g| {
-                draw_save(
-                    g,
-                    theme,
-                    i + 1,
-                    &save.name,
-                    &save.formatted_when(),
-                );
+                draw_save(g, theme, i + 1, &save.name, &save.formatted_when());
             });
         }
     });
@@ -373,11 +367,7 @@ pub fn draw_theme_box(
 pub fn draw_save(graphics: &mut Graphics, theme: &Theme, idx: usize, name: &str, when: &str) {
     graphics.draw_rect(Rect::new_with_size((0, 0), 13, 24), stroke(theme.active));
     graphics.draw_rect(Rect::new_with_size((0, 0), 111, 24), stroke(theme.active));
-    graphics.draw_text(
-        &format!("{idx}"),
-        Px(3, 7),
-        (theme.active, Large),
-    );
+    graphics.draw_text(&format!("{idx}"), Px(3, 7), (theme.active, Large));
     let (part1, part2) = name.split_at(16);
     graphics.draw_text(part1, Px(16, 2), (theme.inactive, Small));
     graphics.draw_text(part2.trim(), Px(16, 8), (theme.inactive, Small));

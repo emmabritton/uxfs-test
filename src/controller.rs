@@ -54,6 +54,7 @@ impl Controller {
 }
 
 impl Controller {
+    #[allow(clippy::type_complexity)]
     pub fn gen_themed(
         theme: &Theme,
     ) -> (
@@ -151,36 +152,36 @@ impl Controller {
             match item.name {
                 ITEM_VOLUME => {
                     value.replace(sound.volume);
-                },
+                }
                 ITEM_ATTACK => {
                     value.replace(sound.attack);
-                },
+                }
                 ITEM_DECAY => {
                     value.replace(sound.decay);
-                },
+                }
                 ITEM_SUSTAIN => {
                     value.replace(sound.sustain);
-                },
+                }
                 ITEM_RELEASE => {
                     value.replace(sound.release);
-                },
+                }
                 ITEM_CRUNCH => {
                     *value = if sound.crunch_enabled {
                         State::Enabled(sound.crunch)
                     } else {
                         State::Disabled(sound.crunch)
                     };
-                },
+                }
                 ITEM_DRIVE => {
                     *value = if sound.drive_enabled {
                         State::Enabled(sound.drive)
                     } else {
                         State::Disabled(sound.drive)
                     };
-                },
+                }
                 ITEM_FREQ => {
                     value.replace(sound.freq() as f32);
-                },
+                }
                 _ => {}
             }
             self.has_changed = true;
@@ -252,15 +253,14 @@ impl Controller {
         sample
     }
 
-    pub fn render(&self, graphics: &mut Graphics<'_>, theme: &Theme, active_theme: usize, saves: &[Option<SoundSave>]) {
-        render_ui(
-            self,
-            graphics,
-            theme,
-            active_theme,
-            &self.waveform,
-            saves,
-        )
+    pub fn render(
+        &self,
+        graphics: &mut Graphics<'_>,
+        theme: &Theme,
+        active_theme: usize,
+        saves: &[Option<SoundSave>],
+    ) {
+        render_ui(self, graphics, theme, active_theme, &self.waveform, saves)
     }
 }
 

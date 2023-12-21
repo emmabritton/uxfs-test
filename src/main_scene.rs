@@ -52,8 +52,12 @@ impl Scene<SR, SN> for MainScene {
     fn render(&self, graphics: &mut Graphics, _: Coord) {
         let theme = &self.themes[self.prefs.data.theme];
         graphics.clear(theme.background);
-        self.controller
-            .render(graphics, theme, self.prefs.data.theme, &self.prefs.data.saved);
+        self.controller.render(
+            graphics,
+            theme,
+            self.prefs.data.theme,
+            &self.prefs.data.saved,
+        );
     }
 
     fn on_key_down(&mut self, key: KeyCode, _: Coord, held_keys: &Vec<&KeyCode>) {
@@ -71,13 +75,28 @@ impl Scene<SR, SN> for MainScene {
                     .on_theme_change(&self.themes[self.prefs.data.theme]);
                 return;
             }
-            if matches!(key, KeyCode::Digit1 | KeyCode::Digit2 | KeyCode::Digit3 | KeyCode::Digit4 | KeyCode::Digit5 | KeyCode::Digit6 | KeyCode::Digit7 | KeyCode::Digit8 | KeyCode::Digit9) {
+            if matches!(
+                key,
+                KeyCode::Digit1
+                    | KeyCode::Digit2
+                    | KeyCode::Digit3
+                    | KeyCode::Digit4
+                    | KeyCode::Digit5
+                    | KeyCode::Digit6
+                    | KeyCode::Digit7
+                    | KeyCode::Digit8
+                    | KeyCode::Digit9
+            ) {
                 let idx = func_key_idx(key);
-                if held_keys.contains(&&KeyCode::ControlLeft) || held_keys.contains(&&KeyCode::ControlRight) {
+                if held_keys.contains(&&KeyCode::ControlLeft)
+                    || held_keys.contains(&&KeyCode::ControlRight)
+                {
                     self.delete_sound(idx);
-                } else if held_keys.contains(&&KeyCode::ShiftLeft) || held_keys.contains(&&KeyCode::ShiftRight) {
+                } else if held_keys.contains(&&KeyCode::ShiftLeft)
+                    || held_keys.contains(&&KeyCode::ShiftRight)
+                {
                     self.load_sound(idx);
-                } else  {
+                } else {
                     self.save_sound(idx);
                 }
             }
@@ -140,6 +159,6 @@ fn func_key_idx(key: KeyCode) -> usize {
         KeyCode::Digit7 => 6,
         KeyCode::Digit8 => 7,
         KeyCode::Digit9 => 8,
-        _ => panic!("Invalid key code {key:?}")
+        _ => panic!("Invalid key code {key:?}"),
     }
 }

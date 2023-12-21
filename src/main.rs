@@ -1,9 +1,9 @@
 #![windows_subsystem = "windows"]
 
-mod settings;
 mod audio;
 mod controller;
 mod main_scene;
+mod settings;
 mod theme;
 mod ui;
 mod waveform;
@@ -11,10 +11,10 @@ mod waveform;
 use crate::audio::Audio;
 use crate::controller::Controller;
 use crate::main_scene::MainScene;
+use crate::settings::Settings;
 use anyhow::Result;
 use log::LevelFilter;
 use pixels_graphics_lib::prelude::*;
-use crate::settings::Settings;
 
 const WIDTH: usize = 340;
 const HEIGHT: usize = 370;
@@ -29,7 +29,8 @@ fn main() -> Result<()> {
         .init();
 
     let window_prefs = WindowPreferences::new("app", "emmabritton", "usfx_tester", 2)?;
-    let app_prefs: AppPrefs<Settings> = AppPrefs::new("app", "emmabritton", "usfx_tester", || Settings::default())?;
+    let app_prefs: AppPrefs<Settings> =
+        AppPrefs::new("app", "emmabritton", "usfx_tester", Settings::default)?;
     let system = Box::new(MainScene::new(app_prefs));
     run_scenes(
         WIDTH,

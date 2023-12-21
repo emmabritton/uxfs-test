@@ -46,9 +46,7 @@ impl SoundSave {
         }
     }
 
-    pub fn fix_name(
-        &mut self
-    ) {
+    pub fn fix_name(&mut self) {
         let osc = match self.osc {
             OscillatorType::Sine => "sin",
             OscillatorType::Saw => "saw",
