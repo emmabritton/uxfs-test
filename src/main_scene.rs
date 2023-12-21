@@ -80,7 +80,9 @@ impl Scene<SR, SN> for MainScene {
             self.controller.has_changed = false;
             let sample = self.controller.create_sample();
             let data = convert_to_data(sample);
-            self.controller.waveform = to_waveform(data, 335, 42);
+            self.controller.waveform = to_waveform(data, 334, 42);
+            // self.controller.waveform = to_waveform(vec![0.0;44100], 334, 42);
+            println!("{:?}", self.controller.waveform);
         }
         self.next_input -= timing.fixed_time_step;
         self.result.clone()

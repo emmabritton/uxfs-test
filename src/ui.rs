@@ -4,6 +4,7 @@ use indexmap::{indexmap, IndexMap};
 use pixels_graphics_lib::buffer_graphics_lib::prelude::TextPos::Px;
 use pixels_graphics_lib::buffer_graphics_lib::prelude::TextSize::*;
 use pixels_graphics_lib::buffer_graphics_lib::prelude::*;
+use pixels_graphics_lib::graphics_shapes::coord;
 use usfx::*;
 
 pub fn render_ui(
@@ -11,7 +12,7 @@ pub fn render_ui(
     graphics: &mut Graphics,
     theme: &Theme,
     active_theme: usize,
-    waveform: &[Coord]
+    waveform: &[(Coord,Coord)]
 ) {
     controller.shapes.render(graphics);
     for text in &controller.texts {
@@ -39,8 +40,6 @@ pub fn render_ui(
     }
 
     graphics.draw_rect(Rect::new((60, 346), (198, 365)), stroke(theme.inactive));
-
-    draw_waveform(graphics, theme, waveform);
 
     draw_button(
         graphics,
@@ -115,12 +114,17 @@ pub fn render_ui(
         &controller.button_shape,
     );
     draw_theme(graphics, theme, active_theme);
+
+    draw_waveform(graphics, theme, waveform);
 }
 
-fn draw_waveform(graphics: &mut Graphics, theme: &Theme, points: &[Coord]) {
-    for point in points {
-        graphics.set_pixel(3+point.x, 297+point.y, theme.active);
-    }
+fn draw_waveform(graphics: &mut Graphics, theme: &Theme, points: &[(Coord,Coord)]) {
+    graphics.with_translate(coord!(3,300), |graphics| {
+        for point in points {
+            // graphics.set_pixel(3+point.x, 297+point.y, RED);
+            graphics.draw_line(point.0, point.1, theme.active);
+        }
+    });
 }
 
 fn draw_item(

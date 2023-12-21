@@ -17,7 +17,7 @@ pub struct Controller {
     pub texts: Vec<Text>,
     pub duty_text: IndexMap<DutyCycle, Text>,
     pub osc_text: IndexMap<OscillatorType, Text>,
-    pub waveform: Vec<Coord>,
+    pub waveform: Vec<(Coord, Coord)>,
     pub has_changed: bool
 }
 
