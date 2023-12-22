@@ -62,8 +62,11 @@ impl Scene<SR, SN> for MainScene {
     }
 
     fn on_key_down(&mut self, key: KeyCode, _: Coord, held_keys: &Vec<&KeyCode>) {
+        if is_modifier(key) {
+            return;
+        }
         if self.next_input <= 0.0 {
-            self.next_input = 0.7;
+            self.next_input = 0.5;
             if key == KeyCode::ArrowLeft {
                 self.prefs.data.theme = self.prefs.data.theme.saturating_sub(1);
                 self.controller
@@ -163,4 +166,8 @@ fn func_key_idx(key: KeyCode) -> usize {
         KeyCode::Digit0 => 9,
         _ => panic!("Invalid key code {key:?}"),
     }
+}
+
+fn is_modifier(key: KeyCode) -> bool {
+    matches!(key, KeyCode::ShiftRight | KeyCode::ShiftLeft | KeyCode::ControlLeft | KeyCode::ControlRight | KeyCode::AltLeft| KeyCode::AltRight)
 }
