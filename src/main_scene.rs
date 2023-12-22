@@ -1,3 +1,4 @@
+use crate::audio::SAMPLE_RATE;
 use crate::theme::{themes, Theme};
 use crate::waveform::Waveform;
 use crate::*;
@@ -7,7 +8,6 @@ use pixels_graphics_lib::prelude::SceneUpdateResult::Nothing;
 use pixels_graphics_lib::prelude::*;
 use pixels_graphics_lib::scenes::SceneUpdateResult::Pop;
 use usfx::{Mixer, Sample};
-use crate::audio::SAMPLE_RATE;
 
 pub struct MainScene {
     controller: Controller,
