@@ -5,7 +5,7 @@ use usfx::{DutyCycle, OscillatorType};
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Settings {
     pub theme: usize,
-    pub saved: [Option<SoundSave>; 9],
+    pub saved: [Option<SoundSave>; 10],
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

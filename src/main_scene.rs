@@ -87,6 +87,7 @@ impl Scene<SR, SN> for MainScene {
                     | KeyCode::Digit7
                     | KeyCode::Digit8
                     | KeyCode::Digit9
+                    | KeyCode::Digit0
             ) {
                 let idx = func_key_idx(key);
                 if held_keys.contains(&&KeyCode::ControlLeft)
@@ -159,6 +160,7 @@ fn func_key_idx(key: KeyCode) -> usize {
         KeyCode::Digit7 => 6,
         KeyCode::Digit8 => 7,
         KeyCode::Digit9 => 8,
+        KeyCode::Digit0 => 9,
         _ => panic!("Invalid key code {key:?}"),
     }
 }

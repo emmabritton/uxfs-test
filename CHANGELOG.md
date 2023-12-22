@@ -3,6 +3,7 @@
 ### Version 0.2.1
 - Tidy up UI
 - Fix save names
+- Add another save slot
 
 ### Version 0.2.0
 - Add themes

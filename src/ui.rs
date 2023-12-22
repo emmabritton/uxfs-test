@@ -124,7 +124,7 @@ pub fn render_ui(
 
     saves.iter().take(10).enumerate().for_each(|(i, save)| {
         if let Some(save) = save {
-            graphics.with_translate(coord!(225, 40 + (i * 26)), |g| {
+            graphics.with_translate(coord!(225, 40 + (i * 22)), |g| {
                 draw_save(g, theme, i + 1, &save.name, &save.formatted_when());
             });
         }
@@ -280,7 +280,7 @@ pub fn generate_shapes(theme: &Theme) -> ShapeCollection {
     );
     InsertShape::insert_above(
         &mut collection,
-        Rect::new((223, 18), (338, 274)),
+        Rect::new((223, 18), (338, 260)),
         stroke(general_color),
     );
     InsertShape::insert_above(
@@ -364,10 +364,14 @@ pub fn draw_theme_box(
     );
 }
 
-pub fn draw_save(graphics: &mut Graphics, theme: &Theme, idx: usize, name: &str, when: &str) {
-    graphics.draw_rect(Rect::new_with_size((0, 0), 13, 24), stroke(theme.active));
-    graphics.draw_rect(Rect::new_with_size((0, 0), 111, 24), stroke(theme.active));
-    graphics.draw_text(&format!("{idx}"), Px(3, 7), (theme.active, Large));
+pub fn draw_save(graphics: &mut Graphics, theme: &Theme, mut idx: usize, name: &str, when: &str) {
+    graphics.draw_rect(Rect::new_with_size((0, 0), 13, 20), stroke(theme.active));
+    graphics.draw_rect(Rect::new_with_size((0, 0), 111, 20), stroke(theme.active));
+    if idx == 10 {
+        //fix last slot number rendering
+        idx = 0;
+    }
+    graphics.draw_text(&format!("{idx}"), Px(3, 5), (theme.active, Large));
     let (part1, part2) = name.split_at(16);
     graphics.draw_text(part1, Px(16, 2), (theme.inactive, Small));
     graphics.draw_text(part2.trim(), Px(16, 8), (theme.inactive, Small));
