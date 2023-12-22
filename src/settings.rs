@@ -70,7 +70,15 @@ impl SoundSave {
         };
         self.name = format!(
             "{} {: >4} {:.1} {:.1} {:.1} {:.1} {} {} {}",
-            osc, self.freq, self.attack, self.decay, self.sustain, self.release, crunch, drive, duty
+            osc,
+            self.freq,
+            self.attack,
+            self.decay,
+            self.sustain,
+            self.release,
+            crunch,
+            drive,
+            duty
         )
     }
 

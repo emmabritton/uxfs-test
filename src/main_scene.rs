@@ -169,5 +169,13 @@ fn func_key_idx(key: KeyCode) -> usize {
 }
 
 fn is_modifier(key: KeyCode) -> bool {
-    matches!(key, KeyCode::ShiftRight | KeyCode::ShiftLeft | KeyCode::ControlLeft | KeyCode::ControlRight | KeyCode::AltLeft| KeyCode::AltRight)
+    matches!(
+        key,
+        KeyCode::ShiftRight
+            | KeyCode::ShiftLeft
+            | KeyCode::ControlLeft
+            | KeyCode::ControlRight
+            | KeyCode::AltLeft
+            | KeyCode::AltRight
+    )
 }
