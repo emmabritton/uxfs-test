@@ -209,6 +209,8 @@ impl Controller {
                 _ => {}
             }
         }
+        save.osc = self.osc_type;
+        save.duty = self.cycle;
         save.fix_name();
         save
     }

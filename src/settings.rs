@@ -62,9 +62,15 @@ impl SoundSave {
             false => " - ".to_string(),
             true => format!("{:.1}", self.drive),
         };
+        let duty = match self.duty {
+            DutyCycle::Eight => "1/8",
+            DutyCycle::Quarter => "1/4",
+            DutyCycle::Third => "1/3",
+            DutyCycle::Half => "1/2",
+        };
         self.name = format!(
-            "{} {: >4} {:.1} {:.1} {:.1}  {:.1} {} {}",
-            osc, self.freq, self.attack, self.decay, self.sustain, self.release, crunch, drive
+            "{} {: >4} {:.1} {:.1} {:.1} {:.1} {} {} {}",
+            osc, self.freq, self.attack, self.decay, self.sustain, self.release, crunch, drive, duty
         )
     }
 

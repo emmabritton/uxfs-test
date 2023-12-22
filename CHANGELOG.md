@@ -1,5 +1,9 @@
 # Changelog
 
+### Version 0.2.1
+- Tidy up UI
+- Fix save names
+
 ### Version 0.2.0
 - Add themes
 - Add waveform view
