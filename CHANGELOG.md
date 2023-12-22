@@ -4,6 +4,7 @@
 - Tidy up UI
 - Fix save names
 - Add another save slot
+- Improve UI handling
 
 ### Version 0.2.0
 - Add themes
