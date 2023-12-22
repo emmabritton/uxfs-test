@@ -4,7 +4,10 @@ use cpal::{SampleFormat, SampleRate, SupportedStreamConfig};
 use std::sync::{Arc, Mutex};
 use usfx::{Mixer, Sample};
 
-const SAMPLE_RATE: u32 = 44_100;
+#[cfg(not(target_os = "windows"))]
+pub const SAMPLE_RATE: u32 = 44_100;
+#[cfg(target_os = "windows")]
+pub const SAMPLE_RATE: u32 = 48_000;
 
 pub struct Audio {
     mixer: Arc<Mutex<Mixer>>,
@@ -34,7 +37,7 @@ impl Audio {
         if config.min_sample_rate() > SampleRate(SAMPLE_RATE)
             || config.max_sample_rate() < SampleRate(SAMPLE_RATE)
         {
-            panic!("44100 Hz not supported");
+            panic!("{SAMPLE_RATE} Hz not supported, please report issue");
         }
 
         let format = SupportedStreamConfig::new(
@@ -51,7 +54,7 @@ impl Audio {
                 &format.config(),
                 move |data, _| stream_mixer.lock().unwrap().generate(data),
                 |err| eprintln!("cpal error: {:?}", err),
-                None
+                None,
             )
             .expect("could not build output stream");
 
