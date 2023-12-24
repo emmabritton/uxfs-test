@@ -315,9 +315,9 @@ dependencies = [
 
 [[package]]
 name = "buffer-graphics-lib"
-version = "0.12.4"
+version = "0.12.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64837d8e1b1a183a51c9c487793db1d8dc9bffc5050f15231207af3f2d9ff34b"
+checksum = "9a0de4b68c4ef55230a9d8b7726bb96a63bd6e3308ecb663370cdb786b4016ce"
 dependencies = [
  "fnv",
  "graphics-shapes",
@@ -1007,9 +1007,9 @@ dependencies = [
 
 [[package]]
 name = "graphics-shapes"
-version = "0.2.4"
+version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9a9faea048364345dd903d82e9aa1e9350371ab7a4b29397bcb0693cd8a18e6"
+checksum = "d4f1948a12a7de11107acc0763d8603906f78c75737cbeea07150bc27505ee8b"
 dependencies = [
  "fnv",
 ]
@@ -1915,13 +1915,12 @@ dependencies = [
 
 [[package]]
 name = "pixels-graphics-lib"
-version = "0.14.0"
+version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34b7b01ec7d9510d2ddbf0c77ccd3f66cb8c323ecadc2b4e60be8e412e7b8c45"
+checksum = "15d6068731a1d78c5a4edae9d4fd6f29b19e14d3881c6ff5d29088d7af3a63ef"
 dependencies = [
  "buffer-graphics-lib",
  "fnv",
- "graphics-shapes",
  "pixels",
  "rustc-hash",
  "serde",

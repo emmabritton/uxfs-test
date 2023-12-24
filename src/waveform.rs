@@ -1,8 +1,4 @@
-use pixels_graphics_lib::buffer_graphics_lib::color::Color;
-use pixels_graphics_lib::buffer_graphics_lib::prelude::Coord;
-use pixels_graphics_lib::buffer_graphics_lib::Graphics;
-use pixels_graphics_lib::graphics_shapes::coord;
-use pixels_graphics_lib::graphics_shapes::lerp::inv_flerp;
+use pixels_graphics_lib::prelude::*;
 
 #[derive(Debug, Default, Clone)]
 pub struct Waveform {

@@ -7,7 +7,6 @@ use pixels_graphics_lib::buffer_graphics_lib::clipping::Clip;
 use pixels_graphics_lib::buffer_graphics_lib::prelude::TextPos::Px;
 use pixels_graphics_lib::buffer_graphics_lib::prelude::TextSize::*;
 use pixels_graphics_lib::buffer_graphics_lib::prelude::*;
-use pixels_graphics_lib::graphics_shapes::coord;
 use usfx::*;
 
 pub fn render_ui(
