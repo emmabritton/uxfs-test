@@ -50,7 +50,7 @@ impl MainScene {
 }
 
 impl Scene<SR, SN> for MainScene {
-    fn render(&self, graphics: &mut Graphics, _: Coord) {
+    fn render(&self, graphics: &mut Graphics, _: Coord, _: &[KeyCode]) {
         let theme = &self.themes[self.prefs.data.theme];
         graphics.clear(theme.background);
         self.controller.render(
@@ -61,7 +61,7 @@ impl Scene<SR, SN> for MainScene {
         );
     }
 
-    fn on_key_down(&mut self, key: KeyCode, _: Coord, held_keys: &Vec<&KeyCode>) {
+    fn on_key_down(&mut self, key: KeyCode, _: Coord, held_keys: &[KeyCode]) {
         if is_modifier(key) {
             return;
         }
@@ -93,12 +93,12 @@ impl Scene<SR, SN> for MainScene {
                     | KeyCode::Digit0
             ) {
                 let idx = func_key_idx(key);
-                if held_keys.contains(&&KeyCode::ControlLeft)
-                    || held_keys.contains(&&KeyCode::ControlRight)
+                if held_keys.contains(&KeyCode::ControlLeft)
+                    || held_keys.contains(&KeyCode::ControlRight)
                 {
                     self.delete_sound(idx);
-                } else if held_keys.contains(&&KeyCode::ShiftLeft)
-                    || held_keys.contains(&&KeyCode::ShiftRight)
+                } else if held_keys.contains(&KeyCode::ShiftLeft)
+                    || held_keys.contains(&KeyCode::ShiftRight)
                 {
                     self.load_sound(idx);
                 } else {
@@ -107,8 +107,7 @@ impl Scene<SR, SN> for MainScene {
             }
             self.controller.key_pressed(
                 key,
-                held_keys.contains(&&KeyCode::ShiftLeft)
-                    || held_keys.contains(&&KeyCode::ShiftRight),
+                held_keys.contains(&KeyCode::ShiftLeft) || held_keys.contains(&KeyCode::ShiftRight),
             );
         }
         if key == KeyCode::Escape {
@@ -117,12 +116,7 @@ impl Scene<SR, SN> for MainScene {
         }
     }
 
-    fn update(
-        &mut self,
-        timing: &Timing,
-        _: Coord,
-        _: &Vec<&KeyCode>,
-    ) -> SceneUpdateResult<SR, SN> {
+    fn update(&mut self, timing: &Timing, _: Coord, _: &[KeyCode]) -> SceneUpdateResult<SR, SN> {
         if self.controller.has_changed {
             self.controller.has_changed = false;
             let sample = self.controller.create_sample();
