@@ -2,7 +2,6 @@ use crate::audio::SAMPLE_RATE;
 use crate::theme::{themes, Theme};
 use crate::waveform::Waveform;
 use crate::*;
-use pixels_graphics_lib::buffer_graphics_lib::prelude::Coord;
 use pixels_graphics_lib::buffer_graphics_lib::Graphics;
 use pixels_graphics_lib::prelude::SceneUpdateResult::Nothing;
 use pixels_graphics_lib::prelude::*;
@@ -50,7 +49,7 @@ impl MainScene {
 }
 
 impl Scene<SR, SN> for MainScene {
-    fn render(&self, graphics: &mut Graphics, _: Coord, _: &[KeyCode]) {
+    fn render(&self, graphics: &mut Graphics, _: &MouseData, _: &[KeyCode]) {
         let theme = &self.themes[self.prefs.data.theme];
         graphics.clear(theme.background);
         self.controller.render(
@@ -61,7 +60,7 @@ impl Scene<SR, SN> for MainScene {
         );
     }
 
-    fn on_key_down(&mut self, key: KeyCode, _: Coord, held_keys: &[KeyCode]) {
+    fn on_key_down(&mut self, key: KeyCode, _: &MouseData, held_keys: &[KeyCode]) {
         if is_modifier(key) {
             return;
         }
@@ -116,7 +115,7 @@ impl Scene<SR, SN> for MainScene {
         }
     }
 
-    fn update(&mut self, timing: &Timing, _: Coord, _: &[KeyCode]) -> SceneUpdateResult<SR, SN> {
+    fn update(&mut self, timing: &Timing, _: &MouseData, _: &[KeyCode]) -> SceneUpdateResult<SR, SN> {
         if self.controller.has_changed {
             self.controller.has_changed = false;
             let sample = self.controller.create_sample();
