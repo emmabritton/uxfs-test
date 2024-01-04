@@ -259,9 +259,9 @@ dependencies = [
 
 [[package]]
 name = "buffer-graphics-lib"
-version = "0.14.0"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "edd3bbd0980e32bf2959b33bd7d0a1d7115028278de40fe922d04edd5f9bec2a"
+checksum = "876808b4e0e9809803dc71f854d8695f894928784b6492af1101e39a5a8cfe90"
 dependencies = [
  "fnv",
  "graphics-shapes",
@@ -830,9 +830,9 @@ dependencies = [
 
 [[package]]
 name = "ici-files"
-version = "0.1.4"
+version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1412ea10abcdd33553ef32cf5ff9e28b4c62bb49fcdce8ae843e31e5cf759197"
+checksum = "d30dc1e18d40690f3afb7255343e80caaa04e0cd77ef82e6c63414f8de77926b"
 dependencies = [
  "thiserror",
 ]
@@ -1446,9 +1446,9 @@ dependencies = [
 
 [[package]]
 name = "pixels-graphics-lib"
-version = "0.15.1"
+version = "0.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "48d108664f285c41a4040affe443ef9c5ad124b921949fdf1b6a8795f66015df"
+checksum = "0345c2238965c437436b7f415bde796aa42c131d6dd9ecba2ccae59bb6f8464b"
 dependencies = [
  "buffer-graphics-lib",
  "pixels",
@@ -1723,9 +1723,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.110"
+version = "1.0.111"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6fbd975230bada99c8bb618e0c365c2eefa219158d5c6c29610fd09ff1833257"
+checksum = "176e46fa42316f18edd598015a5166857fc835ec732f5215eac6b7bdbf0a84f4"
 dependencies = [
  "itoa",
  "ryu",

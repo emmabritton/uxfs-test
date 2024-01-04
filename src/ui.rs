@@ -206,7 +206,7 @@ pub fn generate_shapes(theme: &Theme) -> ShapeCollection {
     let x = [8, 24, 40];
     let y = [8, 20, 30];
     let line_end = 56;
-    let mut collection = ShapeCollection::new();
+    let mut collection = ShapeCollection::default();
     InsertShape::insert_above(
         &mut collection,
         Line::new((x[0], line_start), (x[0], y[0])),
