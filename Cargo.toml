@@ -8,6 +8,11 @@ description = "Simple program to test USFX lib"
 license-file = "LICENSE"
 readme = "README.md"
 
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
 [dependencies]
 usfx = { version = "0.1.5", features = ["serde"] }
 anyhow = "1.0.79"
