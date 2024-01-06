@@ -259,9 +259,9 @@ dependencies = [
 
 [[package]]
 name = "buffer-graphics-lib"
-version = "0.15.0"
+version = "0.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "876808b4e0e9809803dc71f854d8695f894928784b6492af1101e39a5a8cfe90"
+checksum = "55ca72de4b4b0a636723b7286c05bacd3564854e334896eb43722224474df2ee"
 dependencies = [
  "fnv",
  "graphics-shapes",
@@ -830,9 +830,9 @@ dependencies = [
 
 [[package]]
 name = "ici-files"
-version = "0.1.5"
+version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d30dc1e18d40690f3afb7255343e80caaa04e0cd77ef82e6c63414f8de77926b"
+checksum = "059d9916831376ff24c2fae8758559bd6d2c7daa9513e3a75da01cc43001870b"
 dependencies = [
  "thiserror",
 ]
@@ -1446,9 +1446,9 @@ dependencies = [
 
 [[package]]
 name = "pixels-graphics-lib"
-version = "0.15.2"
+version = "0.15.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0345c2238965c437436b7f415bde796aa42c131d6dd9ecba2ccae59bb6f8464b"
+checksum = "b6ca73b825f2435abea87bb52af0c332cf941c447239d71861953bfb4afcd6d0"
 dependencies = [
  "buffer-graphics-lib",
  "pixels",
@@ -1703,18 +1703,18 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.194"
+version = "1.0.195"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b114498256798c94a0689e1a15fec6005dee8ac1f41de56404b67afc2a4b773"
+checksum = "63261df402c67811e9ac6def069e4786148c4563f4b50fd4bf30aa370d626b02"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.194"
+version = "1.0.195"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a3385e45322e8f9931410f01b3031ec534c3947d0e94c18049af4d9f9907d4e0"
+checksum = "46fe8f8603d81ba86327b23a2e9cdf49e1255fb94a4c5f297f6ee0547178ea2c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2607,9 +2607,9 @@ checksum = "dff9641d1cd4be8d1a070daf9e3773c5f67e78b4d9d42263020c057706765c04"
 
 [[package]]
 name = "winit"
-version = "0.29.8"
+version = "0.29.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0dc1a7ae1076890701c7dd71ea35b2aebaf9aeb7b8868ac2d33b1c7e8ef93c00"
+checksum = "c2376dab13e09c01ad8b679f0dbc7038af4ec43d9a91344338e37bd686481550"
 dependencies = [
  "ahash",
  "android-activity",
