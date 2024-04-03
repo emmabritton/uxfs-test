@@ -25,14 +25,14 @@ pub struct Controller {
 impl Controller {
     pub fn new(audio: Audio, theme: &Theme) -> Self {
         let items = indexmap! {
-            Item::new('q', 'w', KeyCode::KeyQ, KeyCode::KeyW, ITEM_VOLUME) => State::Enabled(1.0),
-            Item::new('a', 's', KeyCode::KeyA, KeyCode::KeyS, ITEM_ATTACK)=> State::Enabled(0.1),
-            Item::new('z', 'x', KeyCode::KeyZ, KeyCode::KeyX, ITEM_DECAY)=> State::Enabled(0.1),
-            Item::new('e', 'r', KeyCode::KeyE, KeyCode::KeyR, ITEM_SUSTAIN)=> State::Enabled(0.5),
-            Item::new('d', 'f', KeyCode::KeyD, KeyCode::KeyF, ITEM_RELEASE)=> State::Enabled(0.5),
-            Item::new_int('c', 'v', KeyCode::KeyC, KeyCode::KeyV, ITEM_FREQ)=> State::Enabled(500.0),
-            Item::new_tog('t', 'y', 'u', KeyCode::KeyT, KeyCode::KeyY,KeyCode::KeyU, ITEM_CRUNCH)=> State::Disabled(0.0),
-            Item::new_tog('g', 'h', 'j', KeyCode::KeyG, KeyCode::KeyH,KeyCode::KeyJ, ITEM_DRIVE)=> State::Disabled(0.0),
+            Item::new('Q', 'W', KeyCode::KeyQ, KeyCode::KeyW, ITEM_VOLUME) => State::Enabled(1.0),
+            Item::new('A', 'S', KeyCode::KeyA, KeyCode::KeyS, ITEM_ATTACK)=> State::Enabled(0.1),
+            Item::new('Z', 'X', KeyCode::KeyZ, KeyCode::KeyX, ITEM_DECAY)=> State::Enabled(0.1),
+            Item::new('E', 'R', KeyCode::KeyE, KeyCode::KeyR, ITEM_SUSTAIN)=> State::Enabled(0.5),
+            Item::new('D', 'F', KeyCode::KeyD, KeyCode::KeyF, ITEM_RELEASE)=> State::Enabled(0.5),
+            Item::new_int('C', 'V', KeyCode::KeyC, KeyCode::KeyV, ITEM_FREQ)=> State::Enabled(500.0),
+            Item::new_tog('T', 'Y', 'U', KeyCode::KeyT, KeyCode::KeyY,KeyCode::KeyU, ITEM_CRUNCH)=> State::Disabled(0.0),
+            Item::new_tog('G', 'H', 'J', KeyCode::KeyG, KeyCode::KeyH,KeyCode::KeyJ, ITEM_DRIVE)=> State::Disabled(0.0),
         };
 
         let (shapes, texts, osc_text, duty_text, button_shape) = Controller::gen_themed(theme);

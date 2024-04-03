@@ -5,8 +5,8 @@ use crate::waveform::Waveform;
 use indexmap::{indexmap, IndexMap};
 use pixels_graphics_lib::buffer_graphics_lib::clipping::Clip;
 use pixels_graphics_lib::buffer_graphics_lib::prelude::TextPos::Px;
-use pixels_graphics_lib::buffer_graphics_lib::prelude::TextSize::*;
 use pixels_graphics_lib::buffer_graphics_lib::prelude::*;
+use pixels_graphics_lib::prelude::PixelFont::{Limited3x5, Standard4x5, Standard6x7, Standard8x10};
 use usfx::*;
 
 pub fn render_ui(
@@ -86,7 +86,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        'b',
+        'B',
         6,
         252,
         theme.inactive,
@@ -94,7 +94,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        'n',
+        'N',
         74,
         252,
         theme.inactive,
@@ -102,7 +102,7 @@ pub fn render_ui(
     );
     draw_button(
         graphics,
-        'm',
+        'M',
         6,
         272,
         theme.inactive,
@@ -142,12 +142,12 @@ fn draw_duration(graphics: &mut Graphics, theme: &Theme, waveform: &Waveform) {
     graphics.draw_text(
         &format!("{:.1}", waveform.duration),
         Px(333, 296),
-        (theme.active, Normal, Positioning::RightBottom),
+        (theme.active, Standard6x7, Positioning::RightBottom),
     );
     graphics.draw_text(
-        "s",
+        "S",
         Px(338, 296),
-        (theme.inactive, Small, Positioning::RightBottom),
+        (theme.inactive, Standard4x5, Positioning::RightBottom),
     );
 }
 
@@ -173,7 +173,7 @@ fn draw_item(
     graphics.draw(&Text::new(
         item.name,
         Px(x as isize + 50, y as isize),
-        (theme.active, Large),
+        (theme.active, Standard8x10),
     ));
     let text = match item.item_type {
         ItemType::Float => format!("{:0.1}", value.num()),
@@ -182,7 +182,7 @@ fn draw_item(
     graphics.draw(&Text::new(
         &text,
         Px(x as isize + 150, y as isize),
-        (vcolor, Large),
+        (vcolor, Standard8x10),
     ));
 }
 
@@ -194,7 +194,7 @@ fn draw_button(
     color: Color,
     shape: &Drawable<Rect>,
 ) {
-    graphics.draw_letter((x as isize, y as isize), letter, Large, color);
+    graphics.draw_letter((x as isize, y as isize), letter, Standard8x10, color);
     shape
         .with_move((x as isize - 2, y as isize - 2))
         .render(graphics);
@@ -239,27 +239,28 @@ pub fn generate_shapes(theme: &Theme) -> ShapeCollection {
     );
     InsertShape::insert_above(
         &mut collection,
-        Line::new((80, y[1]), (90, y[1])),
+        Line::new((75, y[1]), (85, y[1])),
         stroke(general_color),
     );
     InsertShape::insert_above(
         &mut collection,
-        Line::new((80, y[2]), (90, y[2])),
+        Line::new((75, y[2]), (85, y[2])),
         stroke(general_color),
     );
     InsertShape::insert_above(
         &mut collection,
-        Line::new((90, y[1]), (90, y[2])),
+        Line::new((85, y[1]), (85, y[2])),
         stroke(general_color),
     );
     InsertShape::insert_above(
         &mut collection,
-        Line::new((90, 25), (96, 25)),
+        Line::new((85, 25), (91, 25)),
         stroke(general_color),
     );
+    //waveform box
     InsertShape::insert_above(
         &mut collection,
-        Rect::new((2, 288), (44, 296)),
+        Rect::new((2, 288), (36, 296)),
         stroke(general_color),
     );
     InsertShape::insert_above(
@@ -293,49 +294,49 @@ pub fn generate_shapes(theme: &Theme) -> ShapeCollection {
 pub fn generate_text(theme: &Theme) -> Vec<Text> {
     let general_text_color = theme.inactive;
     vec![
-        Text::new("Toggle", Px(60, 6), (general_text_color, Small)),
-        Text::new("Dec", Px(60, 18), (general_text_color, Small)),
-        Text::new("Inc", Px(60, 28), (general_text_color, Small)),
+        Text::new("TOGGLE", Px(60, 6), (general_text_color, Limited3x5)),
+        Text::new("DEC", Px(60, 18), (general_text_color, Limited3x5)),
+        Text::new("INC", Px(60, 28), (general_text_color, Limited3x5)),
         Text::new(
-            "Shift to inc/dec faster",
-            Px(100, 22),
-            (general_text_color, Small),
+            "SHIFT TO INC/DEC FASTER",
+            Px(95, 23),
+            (general_text_color, Limited3x5),
         ),
-        Text::new("Oscillator", Px(4, 182), (general_text_color, Large)),
-        Text::new("Duty Cycle", Px(4, 236), (general_text_color, Large)),
-        Text::new("Space to play", Px(65, 351), (general_text_color, Large)),
-        Text::new("Saved", Px(225, 6), (general_text_color, Large)),
-        Text::new("Waveform", Px(4, 290), (general_text_color, Small)),
-        Text::new("1-9  to save", Px(225, 20), (general_text_color, Small)),
-        Text::new("+Shift to load", Px(225, 26), (general_text_color, Small)),
-        Text::new("+Ctrl  to delete", Px(225, 32), (general_text_color, Small)),
-        Text::new("Duration", Px(262, 290), (general_text_color, Small)),
+        Text::new("Oscillator", Px(4, 182), (general_text_color, Standard8x10)),
+        Text::new("Duty Cycle", Px(4, 236), (general_text_color, Standard8x10)),
+        Text::new("Space to play", Px(65, 351), (general_text_color, Standard8x10)),
+        Text::new("Saved", Px(225, 6), (general_text_color, Standard8x10)),
+        Text::new("WAVEFORM", Px(4, 290), (general_text_color, Limited3x5)),
+        Text::new("1-9 TO SAVE", Px(225, 20), (general_text_color, Limited3x5)),
+        Text::new("+SHIFT TO LOAD", Px(225, 26), (general_text_color, Limited3x5)),
+        Text::new("+CTRL TO DELETE", Px(225, 32), (general_text_color, Limited3x5)),
+        Text::new("DURATION", Px(262, 290), (general_text_color, Limited3x5)),
     ]
 }
 
 pub fn osc_text(theme: &Theme) -> IndexMap<OscillatorType, Text> {
     let general_text_color = theme.inactive;
     indexmap![
-        OscillatorType::Sine => Text::new("Sine", Px(20, 198), (general_text_color, Large)),
-        OscillatorType::Triangle => Text::new("Triangle",Px (80, 198), (general_text_color, Large)),
-        OscillatorType::Saw => Text::new("Saw", Px(180, 198), (general_text_color, Large)),
-        OscillatorType::Square => Text::new("Square", Px(20, 216), (general_text_color, Large)),
-        OscillatorType::Noise => Text::new("Noise", Px(100, 216), (general_text_color, Large)),
+        OscillatorType::Sine => Text::new("Sine", Px(20, 198), (general_text_color, Standard8x10)),
+        OscillatorType::Triangle => Text::new("Triangle",Px (80, 198), (general_text_color, Standard8x10)),
+        OscillatorType::Saw => Text::new("Saw", Px(180, 198), (general_text_color, Standard8x10)),
+        OscillatorType::Square => Text::new("Square", Px(20, 216), (general_text_color, Standard8x10)),
+        OscillatorType::Noise => Text::new("Noise", Px(100, 216), (general_text_color, Standard8x10)),
     ]
 }
 
 pub fn duty_text(theme: &Theme) -> IndexMap<DutyCycle, Text> {
     let general_text_color = theme.inactive;
     indexmap![
-        DutyCycle::Half => Text::new("1/2", Px(20, 252), (general_text_color, Large)),
-        DutyCycle::Third => Text::new("1/3", Px(92, 252), (general_text_color, Large)),
-        DutyCycle::Quarter => Text::new("1/4",Px (20, 272), (general_text_color, Large)),
-        DutyCycle::Eight => Text::new("1/8",Px (92, 272), (general_text_color, Large)),
+        DutyCycle::Half => Text::new("1/2", Px(20, 252), (general_text_color, Standard8x10)),
+        DutyCycle::Third => Text::new("1/3", Px(92, 252), (general_text_color, Standard8x10)),
+        DutyCycle::Quarter => Text::new("1/4",Px (20, 272), (general_text_color, Standard8x10)),
+        DutyCycle::Eight => Text::new("1/8",Px (92, 272), (general_text_color, Standard8x10)),
     ]
 }
 
 pub fn draw_theme(graphics: &mut Graphics, theme: &Theme, active: usize) {
-    graphics.draw_text("[ARROWS] THEME", Px(267, 346), (theme.inactive, Small));
+    graphics.draw_text("[ARROWS] THEME", Px(267, 346), (theme.inactive, Standard4x5));
     let width = 60;
     let count = 3;
     let padding = 6;
@@ -370,9 +371,9 @@ pub fn draw_save(graphics: &mut Graphics, theme: &Theme, mut idx: usize, name: &
         //fix last slot number rendering
         idx = 0;
     }
-    graphics.draw_text(&format!("{idx}"), Px(3, 5), (theme.active, Large));
+    graphics.draw_text(&format!("{idx}"), Px(3, 5), (theme.active, Standard8x10));
     let (part1, part2) = name.split_at(16);
-    graphics.draw_text(part1, Px(16, 2), (theme.inactive, Small));
-    graphics.draw_text(part2.trim(), Px(16, 8), (theme.inactive, Small));
-    graphics.draw_text(when, Px(16, 14), (theme.inactive, Small));
+    graphics.draw_text(part1, Px(16, 2), (theme.inactive, Standard4x5));
+    graphics.draw_text(part2.trim(), Px(16, 8), (theme.inactive, Standard4x5));
+    graphics.draw_text(when, Px(16, 14), (theme.inactive, Standard4x5));
 }

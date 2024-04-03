@@ -1,4 +1,4 @@
-use pixels_graphics_lib::buffer_graphics_lib::color::*;
+use pixels_graphics_lib::prelude::*;
 
 pub struct Theme {
     pub active: Color,

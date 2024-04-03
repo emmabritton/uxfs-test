@@ -48,11 +48,11 @@ impl SoundSave {
 
     pub fn fix_name(&mut self) {
         let osc = match self.osc {
-            OscillatorType::Sine => "sin",
-            OscillatorType::Saw => "saw",
-            OscillatorType::Triangle => "tri",
-            OscillatorType::Square => "squ",
-            OscillatorType::Noise => "noi",
+            OscillatorType::Sine => "SIN",
+            OscillatorType::Saw => "SAW",
+            OscillatorType::Triangle => "TRI",
+            OscillatorType::Square => "SQU",
+            OscillatorType::Noise => "NOI",
         };
         let crunch = match self.crunch_enabled {
             false => " - ".to_string(),
