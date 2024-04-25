@@ -174,9 +174,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.81"
+version = "1.0.82"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0952808a6c2afd1aa8947271f3a60f1a6763c7b912d210184c5149b5cf147247"
+checksum = "f538837af36e6f6a9be0faa67f9a314f8119e4e4b5867c6ab40ed60360142519"
 
 [[package]]
 name = "arrayref"
@@ -306,9 +306,9 @@ dependencies = [
 
 [[package]]
 name = "buffer-graphics-lib"
-version = "0.17.0"
+version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1968e9acfb6465f7abf5c13b264f8ce4e65ceb1929aa1334768a440dba53052"
+checksum = "1ad223456918de693377960b2b201c92fe90dc44e0b8deb48e13b79965f6b7c4"
 dependencies = [
  "fnv",
  "graphics-shapes",
@@ -401,9 +401,9 @@ checksum = "fd16c4719339c4530435d38e511904438d07cce7950afa3718a84ac36c10e89e"
 
 [[package]]
 name = "chrono"
-version = "0.4.37"
+version = "0.4.38"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8a0d04d43504c61aa6c7531f1871dd0d418d91130162063b789da00fd7057a5e"
+checksum = "a21f936df1771bf62b77f047b726c4625ff2e8aa607c01ec06e5a05bd8463401"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
@@ -888,9 +888,9 @@ dependencies = [
 
 [[package]]
 name = "ici-files"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c87b395b78f19727f752e7ab9573071d3eccb708bd82a1eb8240f1495102ca42"
+checksum = "bb4f2465c53806e6f25cd3ea57882b8bdaeb4aabbd526f8dc9bf827c86521e7e"
 dependencies = [
  "serde",
  "thiserror",
@@ -1411,11 +1411,12 @@ dependencies = [
 
 [[package]]
 name = "pixels-graphics-lib"
-version = "0.18.0"
+version = "0.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fa722eda562f4c247d8971af755b8570b6c8b57495d6cd0423aaacb0e6a48335"
+checksum = "7cefada16b88f914203e712d5d67e67cff73fd37810852e0d350eb848c000741"
 dependencies = [
  "buffer-graphics-lib",
+ "log",
  "pixels",
  "rustc-hash",
  "serde",
@@ -1658,18 +1659,18 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.197"
+version = "1.0.198"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3fb1c873e1b9b056a4dc4c0c198b24c3ffa059243875552b2bd0933b1aee4ce2"
+checksum = "9846a40c979031340571da2545a4e5b7c4163bdae79b301d5f86d03979451fcc"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.197"
+version = "1.0.198"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7eb0b34b42edc17f6b7cac84a52a1c5f0e1bb2227e997ca9011ea3dd34e8610b"
+checksum = "e88edab869b01783ba905e7d0153f9fc1a6505a96e4ad3018011eedb838566d9"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1678,9 +1679,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.115"
+version = "1.0.116"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12dc5c46daa8e9fdf4f5e71b6cf9a53f2487da0e86e55808e2d35539666497dd"
+checksum = "3e17db7126d17feb94eb3fad46bf1a96b034e8aacbc2e775fe81505f8b0b2813"
 dependencies = [
  "itoa",
  "ryu",

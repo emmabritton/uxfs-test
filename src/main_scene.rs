@@ -49,7 +49,7 @@ impl MainScene {
 }
 
 impl Scene<SR, SN> for MainScene {
-    fn render(&self, graphics: &mut Graphics, _: &MouseData, _: &[KeyCode]) {
+    fn render(&self, graphics: &mut Graphics, _: &MouseData, _: &FxHashSet<KeyCode>) {
         let theme = &self.themes[self.prefs.data.theme];
         graphics.clear(theme.background);
         self.controller.render(
@@ -60,7 +60,7 @@ impl Scene<SR, SN> for MainScene {
         );
     }
 
-    fn on_key_down(&mut self, key: KeyCode, _: &MouseData, held_keys: &[KeyCode]) {
+    fn on_key_down(&mut self, key: KeyCode, _: &MouseData, held_keys: &FxHashSet<KeyCode>) {
         if is_modifier(key) {
             return;
         }
@@ -107,6 +107,7 @@ impl Scene<SR, SN> for MainScene {
             self.controller.key_pressed(
                 key,
                 held_keys.contains(&KeyCode::ShiftLeft) || held_keys.contains(&KeyCode::ShiftRight),
+                held_keys.contains(&KeyCode::ControlLeft) || held_keys.contains(&KeyCode::ControlRight),
             );
         }
         if key == KeyCode::Escape {
@@ -115,7 +116,7 @@ impl Scene<SR, SN> for MainScene {
         }
     }
 
-    fn update(&mut self, timing: &Timing, _: &MouseData, _: &[KeyCode]) -> SceneUpdateResult<SR, SN> {
+    fn update(&mut self, timing: &Timing, _: &MouseData, _: &FxHashSet<KeyCode>) -> SceneUpdateResult<SR, SN> {
         if self.controller.has_changed {
             self.controller.has_changed = false;
             let sample = self.controller.create_sample();

@@ -176,7 +176,7 @@ fn draw_item(
         (theme.active, Standard8x10),
     ));
     let text = match item.item_type {
-        ItemType::Float => format!("{:0.1}", value.num()),
+        ItemType::Float => format!("{:0.2}", value.num()),
         ItemType::Int => format!("{}", value.num().round() as usize),
     };
     graphics.draw(&Text::new(
@@ -196,7 +196,7 @@ fn draw_button(
 ) {
     graphics.draw_letter((x as isize, y as isize), letter, Standard8x10, color);
     shape
-        .with_move((x as isize - 2, y as isize - 2))
+        .with_move((x as isize - 2, y as isize - 3))
         .render(graphics);
 }
 
@@ -297,13 +297,12 @@ pub fn generate_text(theme: &Theme) -> Vec<Text> {
         Text::new("TOGGLE", Px(60, 6), (general_text_color, Limited3x5)),
         Text::new("DEC", Px(60, 18), (general_text_color, Limited3x5)),
         Text::new("INC", Px(60, 28), (general_text_color, Limited3x5)),
-        Text::new(
-            "SHIFT TO INC/DEC FASTER",
-            Px(95, 23),
-            (general_text_color, Limited3x5),
-        ),
+        Text::new("HOLD", Px(95,23), (general_text_color, Limited3x5)),
+        Text::new("SHIFT FOR BIGGER", Px(98,29), (general_text_color, Limited3x5)),
+        Text::new("CONTROL FOR SMALLER", Px(98,35), (general_text_color, Limited3x5)),
         Text::new("Oscillator", Px(4, 182), (general_text_color, Standard8x10)),
         Text::new("Duty Cycle", Px(4, 236), (general_text_color, Standard8x10)),
+        Text::new("(Square only)", Px(110, 240), (general_text_color, Standard4x5)),
         Text::new("Space to play", Px(65, 351), (general_text_color, Standard8x10)),
         Text::new("Saved", Px(225, 6), (general_text_color, Standard8x10)),
         Text::new("WAVEFORM", Px(4, 290), (general_text_color, Limited3x5)),

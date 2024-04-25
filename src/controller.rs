@@ -84,7 +84,7 @@ impl Controller {
         self.button_shape = button_shape;
     }
 
-    pub fn key_pressed(&mut self, key: KeyCode, shift_pressed: bool) {
+    pub fn key_pressed(&mut self, key: KeyCode, shift_pressed: bool, ctrl_pressed: bool) {
         for (item, value) in self.items.iter_mut() {
             let mut delta = match item.item_type {
                 ItemType::Float => 0.1,
@@ -92,6 +92,9 @@ impl Controller {
             };
             if shift_pressed {
                 delta *= 10.0;
+            }
+            if ctrl_pressed {
+                delta /= 10.0;
             }
             if key == item.dec_code {
                 self.has_changed = true;
@@ -380,11 +383,11 @@ impl Item {
     }
 }
 
-const ITEM_VOLUME: &str = "volume";
-const ITEM_ATTACK: &str = "attack";
-const ITEM_DECAY: &str = "decay";
-const ITEM_SUSTAIN: &str = "sustain";
-const ITEM_RELEASE: &str = "release";
-const ITEM_FREQ: &str = "freq";
-const ITEM_CRUNCH: &str = "crunch";
-const ITEM_DRIVE: &str = "drive";
+const ITEM_VOLUME: &str = "Volume";
+const ITEM_ATTACK: &str = "Attack";
+const ITEM_DECAY: &str = "Decay";
+const ITEM_SUSTAIN: &str = "Sustain";
+const ITEM_RELEASE: &str = "Release";
+const ITEM_FREQ: &str = "Freq";
+const ITEM_CRUNCH: &str = "Crunch";
+const ITEM_DRIVE: &str = "Drive";

@@ -16,11 +16,11 @@ codegen-units = 1
 [dependencies]
 usfx = { version = "0.1.5", features = ["serde"] }
 cpal = "0.15.3"
-anyhow = "1.0.81"
-pixels-graphics-lib = {version = "0.18.0", default-features = false, features = ["window_prefs", "scenes"] }
+anyhow = "1.0.82"
+pixels-graphics-lib = {version = "0.19.0", default-features = false, features = ["window_prefs", "scenes"] }
 indexmap = "2.2.6"
-serde_json = "1.0.115"
-serde = { version = "1.0.197", features = ["derive"] }
-chrono = { version = "0.4.37", features = ["alloc", "std", "clock", "serde"] }
+serde_json = "1.0.116"
+serde = { version = "1.0.198", features = ["derive"] }
+chrono = { version = "0.4.38", features = ["alloc", "std", "clock", "serde"] }
 env_logger = "0.11.3"
 log = "0.4.21"
