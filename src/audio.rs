@@ -43,7 +43,7 @@ impl Audio {
         let format = SupportedStreamConfig::new(
             config.channels(),
             SampleRate(SAMPLE_RATE),
-            config.buffer_size().clone(),
+            *config.buffer_size(),
             SampleFormat::F32,
         );
 

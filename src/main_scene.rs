@@ -107,7 +107,8 @@ impl Scene<SR, SN> for MainScene {
             self.controller.key_pressed(
                 key,
                 held_keys.contains(&KeyCode::ShiftLeft) || held_keys.contains(&KeyCode::ShiftRight),
-                held_keys.contains(&KeyCode::ControlLeft) || held_keys.contains(&KeyCode::ControlRight),
+                held_keys.contains(&KeyCode::ControlLeft)
+                    || held_keys.contains(&KeyCode::ControlRight),
             );
         }
         if key == KeyCode::Escape {
@@ -116,7 +117,13 @@ impl Scene<SR, SN> for MainScene {
         }
     }
 
-    fn update(&mut self, timing: &Timing, _: &MouseData, _: &FxHashSet<KeyCode>) -> SceneUpdateResult<SR, SN> {
+    fn update(
+        &mut self,
+        timing: &Timing,
+        _: &MouseData,
+        _: &FxHashSet<KeyCode>,
+        _: &Window,
+    ) -> SceneUpdateResult<SR, SN> {
         if self.controller.has_changed {
             self.controller.has_changed = false;
             let sample = self.controller.create_sample();
@@ -138,7 +145,13 @@ fn convert_to_data(sample: Sample) -> Vec<f32> {
     loop {
         mixer.generate(&mut buffer);
         if buffer.iter().any(|&num| num != 0.0 && num != -0.0) {
-            output.extend_from_slice(&buffer);
+            output.extend_from_slice(
+                &buffer
+                    .iter()
+                    .copied()
+                    .filter(|v| v.is_normal())
+                    .collect::<Vec<f32>>(),
+            );
         } else {
             break;
         }

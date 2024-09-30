@@ -1,5 +1,8 @@
 # Changelog
 
+### Version 0.2.2
+- Update deps
+
 ### Version 0.2.1
 - Tidy up UI
 - Fix save names

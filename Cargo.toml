@@ -1,6 +1,6 @@
 [package]
 name = "usfx_test"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 publish = false
 authors = ["Emma Britton <emmabritton@pm.me>"]
@@ -16,11 +16,11 @@ codegen-units = 1
 [dependencies]
 usfx = { version = "0.1.5", features = ["serde"] }
 cpal = "0.15.3"
-anyhow = "1.0.82"
-pixels-graphics-lib = {version = "0.19.0", default-features = false, features = ["window_prefs", "scenes"] }
-indexmap = "2.2.6"
-serde_json = "1.0.116"
-serde = { version = "1.0.198", features = ["derive"] }
+anyhow = "1.0.89"
+pixels-graphics-lib = {version="0.20.0", default-features = false, features = ["window_prefs", "scenes", "softbuffer"] }
+indexmap = "2.5.0"
+serde_json = "1.0.128"
+serde = { version = "1.0.210", features = ["derive"] }
 chrono = { version = "0.4.38", features = ["alloc", "std", "clock", "serde"] }
-env_logger = "0.11.3"
-log = "0.4.21"
+env_logger = "0.11.5"
+log = "0.4.22"

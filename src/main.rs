@@ -40,7 +40,7 @@ fn main() -> Result<()> {
         |_style, _list, _key| {},
         system,
         Options::default(),
-        empty_pre_post()
+        empty_pre_post(),
     )?;
     Ok(())
 }

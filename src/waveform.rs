@@ -1,19 +1,38 @@
+use pixels_graphics_lib::prelude::PixelFont::Standard4x4;
 use pixels_graphics_lib::prelude::*;
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Clone)]
 pub struct Waveform {
     pub duration: f32,
     points: Vec<(Coord, Coord)>,
+    error: bool,
+    center: TextPos,
 }
 
 impl Waveform {
     pub fn new(data: Vec<f32>, sample_rate: usize, width: usize, height: usize) -> Self {
         let duration = data.len() as f32 / sample_rate as f32;
-        let points = to_waveform(data, width, height);
-        Waveform { duration, points }
+        let (error, points) = if data.iter().any(|v| v.is_nan() || v.is_infinite()) {
+            (true, vec![])
+        } else {
+            (false, to_waveform(data, width, height))
+        };
+        Waveform {
+            duration,
+            points,
+            error,
+            center: TextPos::Px((width / 2) as isize, (height / 2) as isize),
+        }
     }
 
     pub fn render_line(&self, graphics: &mut Graphics, color: Color) {
+        if self.error {
+            graphics.draw_text(
+                "ERROR RENDERING WAVEFORM",
+                self.center,
+                (color, Standard4x4, Positioning::Center),
+            )
+        }
         for (top, bottom) in &self.points {
             graphics.draw_line(top, bottom, color);
         }
