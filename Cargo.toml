@@ -1,6 +1,6 @@
 [package]
 name = "usfx_test"
-version = "0.2.2"
+version = "0.2.3"
 edition = "2021"
 publish = false
 authors = ["Emma Britton <emmabritton@pm.me>"]
@@ -17,7 +17,7 @@ codegen-units = 1
 usfx = { version = "0.1.5", features = ["serde"] }
 cpal = "0.15.3"
 anyhow = "1.0.89"
-pixels-graphics-lib = {version="0.20.0", default-features = false, features = ["window_prefs", "scenes", "softbuffer"] }
+pixels-graphics-lib = {version="0.20.1", default-features = false, features = ["window_prefs", "scenes", "softbuffer"] }
 indexmap = "2.5.0"
 serde_json = "1.0.128"
 serde = { version = "1.0.210", features = ["derive"] }
