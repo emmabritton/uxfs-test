@@ -40,12 +40,16 @@ jobs:
       matrix:
         target:
           - x86_64-apple-darwin
+          - aarch64-apple-darwin
           - x86_64-pc-windows-msvc
           - x86_64-unknown-linux-gnu
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             name: games-linux.tar.gz
+          - target: aarch64-apple-darwin
+            os: macOS-latest
+            name: games-arm_mac.tar.gz
           - target: x86_64-apple-darwin
             os: macOS-latest
             name: games-mac.tar.gz
@@ -58,6 +62,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
+
+      - name: Add x86 mac target
+        if: matrix.target == 'x86_64-apple-darwin'
+        run: rustup target add x86_64-apple-darwin
 
       - name: Install linux deps
         if: matrix.os == 'ubuntu-latest'
